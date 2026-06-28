@@ -1,3 +1,5 @@
+mode: auto
+
 banner:
   enable: true
   title: 逆水行舟不进则退
