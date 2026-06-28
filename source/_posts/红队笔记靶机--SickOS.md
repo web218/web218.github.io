@@ -156,7 +156,7 @@ Nmap done: 1 IP address (1 host up) scanned in 40.59 seconds
 
 打开3128我们发现是一个报错界面
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260623123941252.png image-20260623123941252 %}
+{% asset_img image-20260623123941252.png image-20260623123941252 %}
 
 [报错]: 尝试取回网址时遇到以下错误:/(http://192.168.8.103:3128/)**无效的网址**请求的 URL 的某些方面不正确。一些可能的问题是:缺失或错误的访问协议(应为 http://http:// 或类似)缺少主机名非法双重逃脱不允许以主机名为非法字符;下划线。webmaster(mailto:
 
@@ -340,7 +340,7 @@ DOWNLOADED: 4612 - FOUND: 8
 
 我们打开首页 发现出现了一个巨大的BLEHHHH!的字样 
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627102440501.png image-20260627102440501 %}
+{% asset_img image-20260627102440501.png image-20260627102440501 %}
 
 查询这个单词的意思：是一个口语或者表示郁闷 在渗透测试过程中，可能为某些系统默认页特征，接下来查看robots/robots.txt的内容：
 
@@ -407,25 +407,25 @@ DOWNLOADED: 4612 - FOUND: 7
 
 先查看index.php页面
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627103745950.png image-20260627103745950 %}
+{% asset_img image-20260627103745950.png image-20260627103745950 %}
 
 其中Posted by Administrator on Sat, 5 Dec 2015 我们可以得知 文章是以管理员用户或者管理员用户组身份发布的 接下来我们需要知道后台登陆页面的路径，由于目录扫描未扫出路径，这里我们去网上搜素：
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627105006799.png image-20260627105006799 %}
+{% asset_img image-20260627105006799.png image-20260627105006799 %}
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627105053318.png image-20260627105053318 %}
+{% asset_img image-20260627105053318.png image-20260627105053318 %}
 
 尝试弱密码：admin/admin 成功登入！
 
 后台：
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627111051915.png image-20260627111051915 %}
+{% asset_img image-20260627111051915.png image-20260627111051915 %}
 
 我们找到这个功能，向Upload file这里传入文件，或者点开Pages/layouts  嵌入webshell
 
 我们使用第二点 ，向主题网页中嵌入反向shell脚本，这样在目标中会更加隐蔽：
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627114603634.png image-20260627114603634 %}
+{% asset_img image-20260627114603634.png image-20260627114603634 %}
 
 添加php代码：
 
@@ -759,13 +759,11 @@ Thanks for Trying
 
   发现存在CVE-2014-6271 
 
-{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260628091603757.png image-20260628091603757 %}
+{% asset_img image-20260628091603757.png image-20260628091603757 %}
 
 简单来说就是 Shell在处理环境变量时，错误地将函数定义后面的字符串也当作命令来执行了
 
-```bash
-env x='() { :;}; echo vulnerable' bash -c "echo test"
-```
+`env x='() { :;}; echo vulnerable' bash -c "echo test"`
 
 上面的POC： 创建一个临时的环境变量，() { :;}; 是空函数的写法，bash 会解析函数之外的内容 即echo vulnerable' bash -c "echo test"
 
