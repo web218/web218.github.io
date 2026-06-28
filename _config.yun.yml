@@ -14,8 +14,8 @@ banner:
   medium_zoom: true
 bg_image:
   enable: true
-  url: /images/2.png
-  dark: /images/1.png
+  url: /images/1.png
+  dark: /images/55.png
   blur: 10px # 设置背景模糊程度
   opacity: 0.6
 avatar:
