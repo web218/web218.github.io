@@ -80,25 +80,7 @@ menu:
     - type: tags
       path: /tags/
       icon: ri:price-tag-3-line
-    - type: custom
-      title: CTF
-      path: /categories/CTF/
-      icon: ri:flag-2-line
-    - type: custom
-      title: 代码审计
-      path: /categories/代码审计/
-      icon: ri:bug-line
-    - type: custom
-      title: 靶场系列
-      path: /categories/靶场系列/
-      icon: ri:crosshairs-line
-    - type: custom
-      title: 杂谈
-      path: /categories/杂谈/
-      icon: ri:chat-4-line
-
-categories:
-  CTF: "#FF6B6B"
-  代码审计: "#4ECDC4"
-  靶场系列: "#FFE66D"
-  杂谈: "#A8E6CF"
+  # custom:
+  #   title: 文档
+  #   path: https://yun.yunyoujun.cn
+  #   icon: ri:settings-line
