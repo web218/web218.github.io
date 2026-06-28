@@ -86,3 +86,6 @@ menu:
   #   title: 文档
   #   path: https://yun.yunyoujun.cn
   #   icon: ri:settings-line
+
+vendors:
+  yun_markdown_css: github-markdown-css/github-markdown.css
