@@ -725,7 +725,7 @@ Thanks for Trying
 
 我们在目录扫描的过程中发现了/cgi-bin/bin ,  这时我们需要用到nikto 去扫描一下：
 
-+ ```shell
+```shell
   ╭─ /home/kali ······························································································································································· х INT with root@kali at 21:04:49 ─╮
   ╰─❯ nikto -h 192.168.8.103 -useproxy http://192.168.8.103:3128                                                                                                                                                 
   
@@ -755,7 +755,7 @@ Thanks for Trying
   + /index: Apache mod_negotiation is enabled with MultiViews, which allows attackers to easily brute force file names. The following alternatives for 'index' were found: index.php. See: http://www.wisec.it/sectou.php?id=4698ebdc59d15,https://exchange.xforce.ibmcloud.com/vulnerabilities/8275
   + /cgi-bin/status: Uncommon header '93e4r0-cve-2014-6278' found, with contents: true.
   + /cgi-bin/status: Site appears vulnerable to the 'shellshock' vulnerability. See: http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-6271
-  ```
+```
 
   发现存在CVE-2014-6271 
 
