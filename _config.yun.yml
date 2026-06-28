@@ -88,4 +88,4 @@ menu:
   #   icon: ri:settings-line
 
 vendors:
-  yun_markdown_css: star-markdown-css/dist/pure/markdown.min.css
+  yun_markdown_css: star-markdown-css/dist/planet/markdown.min.css
