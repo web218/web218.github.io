@@ -44,6 +44,8 @@ post_asset_folder: true
 relative_link: false
 future: true
 syntax_highlighter: highlight.js
+marked:
+  post_asset: true
 highlight:
   line_number: true
   auto_detect: false
