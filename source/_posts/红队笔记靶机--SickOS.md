@@ -1,9 +1,9 @@
 ﻿---
-title: vulnhub靶机--SickOS
+title: 红队笔记靶机--SickOS
 categories: 靶机系列
 ---
 
-# vulnhub靶机--SickOS
+# 红队笔记靶机--SickOS
 
 ### 1.主机发现和信息收集
 
