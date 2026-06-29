@@ -30,7 +30,7 @@ links:
     desc: 信息安全交流群
     color: '#0078e7'
   - url: https://blog.ss0t-hacked.top
-    avatar: 图片待补充
+    avatar: /images/ss0t-avatar.png
     name: 宇宙无敌PWN大手子
     blog: ss0t-hacked
     desc: 宇宙无敌PWN大手子
