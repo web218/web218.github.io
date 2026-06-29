@@ -1,9 +1,10 @@
 ﻿---
-title: 红队笔记靶机--SickOS
+title: vulnhub靶机--SickOS
+date: 2026-06-28 17:32:07
 categories: 靶机系列
 ---
 
-# 红队笔记靶机--SickOS
+# vulnhub靶机--SickOS
 
 ### 1.主机发现和信息收集
 
