@@ -1,6 +1,6 @@
 ---
 title: THL靶机--Photographer
-categories: THL靶机
+categories: 靶机系列
 ---
 
 ## 一.主机发现和信息收集
