@@ -102,6 +102,12 @@ ignore:
 ## Themes: https://hexo.io/themes/
 theme: yun
 
+# Search
+search:
+  path: search.json
+  field: post
+  content: true
+
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
