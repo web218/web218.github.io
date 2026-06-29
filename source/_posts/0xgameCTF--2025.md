@@ -1,5 +1,5 @@
 ---
-title: 0xgameCTF--2025
+title: 0xgameCTF2025 Web部分题解
 categories: CTF
 ---
 
