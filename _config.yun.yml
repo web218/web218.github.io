@@ -112,5 +112,8 @@ footer:
     animated: true
     color: "#ff0000"
 
+icons:
+  category: ri:code-box-line
+
 vendors:
   yun_markdown_css: star-markdown-css@0.5.3/dist/earth/earth-markdown.min.css
