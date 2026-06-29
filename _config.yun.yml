@@ -87,5 +87,27 @@ menu:
   #   path: https://yun.yunyoujun.cn
   #   icon: ri:settings-line
 
+fireworks:
+  enable: true
+
+scrollreveal:
+  enable: true
+
+smoothScroll: true
+
+say:
+  enable: true
+  api: https://el-bot-api.vercel.app/api/words/young
+
+search:
+  modal: true
+
+footer:
+  since: 2025
+  icon:
+    name: ri:heart-3-line
+    animated: true
+    color: "#ff0000"
+
 vendors:
   yun_markdown_css: star-markdown-css@0.5.3/dist/earth/earth-markdown.min.css
