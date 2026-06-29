@@ -1,6 +1,6 @@
 ---
-title: vulnhub靶机--Photographer
-categories: 靶机系列
+title: THL靶机--Photographer
+categories: THL靶机
 ---
 
 ## 一.主机发现和信息收集
