@@ -39,7 +39,7 @@ IconifyProviders = {
   document.addEventListener('click', function(e) {
     var el = document.createElement('span');
     el.textContent = emoji[Math.floor(Math.random() * emoji.length)];
-    el.style.cssText = 'position:fixed;left:' + (e.clientX - 16) + 'px;top:' + (e.clientY - 16) + 'px;font-size:16px;font-weight:bold;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1.2s ease-out;opacity:1;transform:translateY(0)';
+    el.style.cssText = 'position:fixed;left:' + (e.clientX - 20) + 'px;top:' + (e.clientY - 20) + 'px;font-size:20px;font-weight:bold;white-space:nowrap;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1.2s ease-out;opacity:1;transform:translateY(0)';
     document.body.appendChild(el);
     requestAnimationFrame(function() {
       el.style.transform = 'translateY(-80px)';
