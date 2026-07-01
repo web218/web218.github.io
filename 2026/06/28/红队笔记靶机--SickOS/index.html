@@ -189,16 +189,16 @@ IconifyProviders = {
   // initial sync
   waitAndSync();
 })();</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 – 2026 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:heart-3-line"></span></span><span class="author"> K1r1t5u6u</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>(function(){
-  var chars = Array.from('富强民主文明和谐自由平等公正法治爱国敬业诚信友善✨🌟💫🎉🎊🎈🌸🌺🌻🌹🌷💐🌈⭐🔥💥');
+  var emoji = ['富强','民主','文明','和谐','自由','平等','公正','法治','爱国','敬业','诚信','友善'];
   document.addEventListener('click', function(e) {
-    var t = document.createElement('span');
-    t.textContent = chars[Math.floor(Math.random() * chars.length)];
-    t.style.cssText = 'position:fixed;left:' + (e.clientX - 8) + 'px;top:' + (e.clientY - 8) + 'px;font-size:' + (14 + Math.random() * 20) + 'px;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1s ease-out;opacity:1';
-    document.body.appendChild(t);
+    var el = document.createElement('span');
+    el.textContent = emoji[Math.floor(Math.random() * emoji.length)];
+    el.style.cssText = 'position:fixed;left:' + (e.clientX - 16) + 'px;top:' + (e.clientY - 16) + 'px;font-size:16px;font-weight:bold;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1.2s ease-out;opacity:1;transform:translateY(0)';
+    document.body.appendChild(el);
     requestAnimationFrame(function() {
-      t.style.transform = 'translateY(-' + (60 + Math.random() * 80) + 'px)';
-      t.style.opacity = '0';
+      el.style.transform = 'translateY(-80px)';
+      el.style.opacity = '0';
     });
-    setTimeout(function() { t.remove() }, 1200);
+    setTimeout(function() { el.remove() }, 1400);
   });
 })();</script></body></html>
