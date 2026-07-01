@@ -187,6 +187,5 @@ IconifyProviders = {
     });
     setTimeout(function() { el.remove() }, 1400);
   }
-  document.addEventListener('mousedown', spawn);
-  document.addEventListener('touchstart', function(e) { spawn(e.touches[0] || e); });
+  document.addEventListener('pointerdown', spawn, true);
 })();</script></body></html>
