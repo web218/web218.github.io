@@ -121,16 +121,27 @@ IconifyProviders = {
   var themes = { dark: 'github-dark', light: 'github-light' };
   function setTheme(theme) {
     var frame = document.querySelector('.utterances-frame');
-    if (frame) frame.contentWindow.postMessage({ type: 'set-theme', theme: theme }, 'https://utteranc.es');
+    if (frame) {
+      frame.contentWindow.postMessage({ type: 'set-theme', theme: theme }, 'https://utteranc.es');
+    }
   }
   function sync() {
-    setTheme(document.documentElement.classList.contains('dark') ? themes.dark : themes.light);
+    var isDark = document.documentElement.classList.contains('dark');
+    setTheme(isDark ? themes.dark : themes.light);
   }
-  var obs = new MutationObserver(function(ms) {
-    ms.forEach(function(m) { if (m.attributeName === 'class') sync(); });
+  // retry until iframe is ready, then sync
+  function waitAndSync() {
+    if (document.querySelector('.utterances-frame')) { sync(); return }
+    setTimeout(waitAndSync, 200);
+  }
+  // listen for dark mode toggle click
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('#toggle-mode-btn');
+    if (btn) setTimeout(waitAndSync, 100);
   });
-  obs.observe(document.documentElement, { attributes: true });
-  var wait = setInterval(function() {
-    if (document.querySelector('.utterances-frame')) { sync(); clearInterval(wait); }
-  }, 500);
+  // watch html class change
+  var obs = new MutationObserver(function() { waitAndSync(); });
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  // initial sync
+  waitAndSync();
 })();</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 – 2026 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:heart-3-line"></span></span><span class="author"> K1r1t5u6u</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></body></html>
