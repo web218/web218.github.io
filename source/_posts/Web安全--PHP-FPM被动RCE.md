@@ -2,7 +2,7 @@
 title: Web安全--PHP-FPM被动RCE
 categories:
 - CTF
-- Web
+- Web安全
 tags:
 - Web安全
 - PHP-FPM

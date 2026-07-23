@@ -2,7 +2,9 @@
 title: SQLite注入
 date: 2026-07-23 13:30:00
 tags: [SQLite, SQL注入, 数据库安全, Web安全]
-categories: Web安全
+categories:
+- CTF
+- Web安全
 comments: true
 ---
 

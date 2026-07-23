@@ -2,7 +2,7 @@
 title: SSRF进阶--Redis主从复制到RCE
 categories:
 - CTF
-- Web
+- Web安全
 tags:
 - Web安全
 - SSRF
