@@ -1,6 +1,10 @@
 ---
 title: vulnhub靶机--W1R3S-1.0.1
 categories: 靶机系列
+tags:
+- 渗透
+- vulnhub
+- 提权
 ---
 
 ## 一.主机发现和信息收集
@@ -107,7 +111,7 @@ Nmap done: 1 IP address (1 host up) scanned in 22.19 seconds
 
 -p : 指定端口扫描 
 
-如果不分阶段，直接使用-p- 扫描会触发告警，大大增加暴露的几率
+如果不分阶段，直接使用-p- -sV -sC 这种大量端口和其他参数组合 扫描会触发告警，大大增加暴露的几率
 
 下面对UDP服务进行完整信息收集
 

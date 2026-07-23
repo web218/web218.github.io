@@ -1,6 +1,10 @@
 ---
 title: THL靶机--Securitrona
 categories: 靶机系列
+tags:
+- 渗透
+- THL
+- 提权
 ---
 
 ## 一.主机发现和信息收集

@@ -1,6 +1,10 @@
 ---
 title: vulnhub靶机--Jarbas
 categories: 靶机系列
+tags:
+- 渗透
+- vulnhub
+- 提权
 ---
 
 ## 一.主机发现和信息收集：

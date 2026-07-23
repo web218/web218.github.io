@@ -3,6 +3,10 @@ title: Web安全--PHP-FPM被动RCE
 categories:
 - CTF
 - Web
+tags:
+- Web安全
+- PHP-FPM
+- FastCGI
 ---
 
 ## 前置知识

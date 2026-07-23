@@ -112,6 +112,20 @@ footer:
     animated: true
     color: "#ff0000"
 
+comment:
+  enable: true
+  icon: ri:chat-3-line
+  tips: false
+  candidates:
+    - utterances
+
+utterances:
+  enable: true
+  repo: web218/web218.github.io
+  issue-term: pathname
+  label: comment
+  theme: github-light
+
 icons:
   category: ri:code-box-line
 

@@ -3,7 +3,7 @@ layout: links
 title: 我的小伙伴们
 keywords: 链接
 description: Whoami的小伙伴们
-comments: true
+comments: false
 links:
   - url: https://zmrz1.github.io/
     avatar: https://zmrz1.github.io/images/avatar.png

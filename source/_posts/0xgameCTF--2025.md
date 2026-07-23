@@ -3,6 +3,9 @@ title: 0xgameCTF2025 Web部分题解
 categories:
 - CTF
 - 赛题复现
+tags:
+- Web安全
+- 赛题复现
 ---
 
 ## 一. RCE1

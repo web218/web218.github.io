@@ -2,6 +2,10 @@
 title: vulnhub靶机--SickOS
 date: 2026-06-28 17:32:07
 categories: 靶机系列
+tags:
+- 渗透
+- vulnhub
+- 提权
 ---
 
 # vulnhub靶机--SickOS
