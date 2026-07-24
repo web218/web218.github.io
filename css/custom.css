@@ -7,9 +7,14 @@
   color: #eee !important;
 }
 
-/* 上一篇/下一篇 - 亮色白底 暗色黑底 */
+/* 上一篇/下一篇 - 亮色白底黑字 暗色黑底白字 */
 .pagination-related {
   background: #fff !important;
+}
+.pagination-related .info .info-1 .info-item-1,
+.pagination-related .info .info-1 .info-item-2,
+.pagination-related .info .info-2 .info-item-1 {
+  color: #333 !important;
 }
 .pagination-related .cover {
   display: none !important;
