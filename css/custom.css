@@ -28,18 +28,25 @@
   color: #eee !important;
 }
 
-/* 文章头图遮罩 - 暗色加黑半透明遮罩 */
-[data-theme="dark"] #page-header.post-bg::before {
+/* 文章头图：去掉背景图片，改为纯色半透明遮罩透出页面背景图 */
+#page-header.post-bg {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+#page-header.post-bg::before {
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.45);
   content: '';
+  background-color: rgba(255, 255, 255, 0.45);
 }
-[data-theme="dark"] #page-header.post-bg > * {
+[data-theme="dark"] #page-header.post-bg::before {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+#page-header.post-bg > * {
   position: relative;
   z-index: 2;
 }
