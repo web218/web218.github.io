@@ -1,4 +1,11 @@
-/* 暗色模式 - 底部版权区黑底白字 */
+/* 底部版权区 - 亮色白底灰字 暗色黑底白字 */
+#footer {
+  background-color: #fff !important;
+}
+#footer a,
+#footer > * {
+  color: #666 !important;
+}
 [data-theme="dark"] #footer {
   background-color: #111 !important;
 }
