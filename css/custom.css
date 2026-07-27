@@ -40,12 +40,14 @@
   color: #eee !important;
 }
 
-/* 文章头图：去掉背景图片，改为纯色半透明遮罩透出页面背景图 */
-#page-header.post-bg {
+/* 文章头图 & 分类/标签/归档/友链页：去掉背景图片，改为纯色半透明遮罩透出页面背景图 */
+#page-header.post-bg,
+#page-header.not-home-page {
   background-image: none !important;
   background-color: transparent !important;
 }
-#page-header.post-bg::before {
+#page-header.post-bg::before,
+#page-header.not-home-page::before {
   position: absolute;
   top: 0;
   left: 0;
@@ -55,10 +57,12 @@
   content: '';
   background-color: rgba(255, 255, 255, 0.25);
 }
-[data-theme="dark"] #page-header.post-bg::before {
+[data-theme="dark"] #page-header.post-bg::before,
+[data-theme="dark"] #page-header.not-home-page::before {
   background-color: rgba(0, 0, 0, 0.30);
 }
-#page-header.post-bg > * {
+#page-header.post-bg > *,
+#page-header.not-home-page > * {
   position: relative;
   z-index: 2;
 }
