@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://web218.github.io/2026/07/25/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/</loc>
+    <lastmod>2026-11-02</lastmod>
+  </url>
+  <url>
     <loc>https://web218.github.io/2026/10/21/HTB%E9%9D%B6%E5%9C%BA--Enigma/</loc>
     <lastmod>2026-10-21</lastmod>
   </url>
@@ -31,10 +35,6 @@
   <url>
     <loc>https://web218.github.io/2026/08/06/Vulnhub%E9%9D%B6%E6%9C%BA--pwnos2.0/</loc>
     <lastmod>2026-08-06</lastmod>
-  </url>
-  <url>
-    <loc>https://web218.github.io/2026/07/25/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/%E5%88%B7%E9%A2%98%E8%AE%B0%E5%BD%95/</loc>
-    <lastmod>2026-07-30</lastmod>
   </url>
   <url>
     <loc>https://web218.github.io/2026/07/24/thinkphp/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/</loc>
