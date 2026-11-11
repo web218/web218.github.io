@@ -74,3 +74,24 @@
 [data-theme="dark"] .container a {
   color: #aab !important;
 }
+
+/* 标题打字机光标 */
+.typewriter-title::after {
+  content: '|';
+  margin-left: 2px;
+  color: #49b1f5;
+  animation: typewriter-cursor 1s step-end infinite;
+}
+.typewriter-title.typewriter-done::after {
+  content: '';
+  animation: none;
+}
+@keyframes typewriter-cursor {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
